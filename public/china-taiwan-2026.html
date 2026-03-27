@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>China & Taiwan 2026 — Trip Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0D1B12;
+  --ink2:#1A2E20;
+  --jade:#1B6B45;
+  --jade-mid:#2D9B66;
+  --jade-light:#6FCF97;
+  --jade-pale:#E8F5EE;
+  --jade-mist:#F2FAF5;
+  --gold:#C9A84C;
+  --gold-pale:#FBF5E6;
+  --blossom:#F9E0E5;
+  --blossom-mid:#E8A0B0;
+  --parchment:#FAFAF7;
+  --cream:#F5F2EC;
+
+  --bg:var(--parchment);
+  --bg2:var(--cream);
+  --bg3:#EDEAE3;
+  --text:var(--ink);
+  --text2:#3D4F42;
+  --text3:#7A8C80;
+  --border:rgba(27,107,69,.13);
+  --border2:rgba(27,107,69,.25);
+  --border-strong:rgba(27,107,69,.4);
+
+  --r:8px;--rlg:12px;--rxl:16px;
+}
+
+body{
+  font-family:'DM Sans',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  font-size:14px;
+  line-height:1.5;
+}
+
+/* ─── Bamboo watermark bg ─── */
+body::before{
+  content:'';
+  position:fixed;top:0;right:0;
+  width:340px;height:100vh;
+  background-image:
+    radial-gradient(ellipse 2px 60px at 270px 120px, rgba(27,107,69,.06) 0%, transparent 100%),
+    radial-gradient(ellipse 2px 80px at 290px 300px, rgba(27,107,69,.05) 0%, transparent 100%),
+    radial-gradient(ellipse 2px 55px at 265px 500px, rgba(27,107,69,.06) 0%, transparent 100%),
+    radial-gradient(ellipse 1px 40px at 310px 200px, rgba(27,107,69,.04) 0%, transparent 100%),
+    radial-gradient(ellipse 1px 50px at 305px 420px, rgba(27,107,69,.04) 0%, transparent 100%),
+    radial-gradient(circle 60px at 240px 180px, rgba(249,224,229,.25) 0%, transparent 70%),
+    radial-gradient(circle 40px at 320px 350px, rgba(249,224,229,.18) 0%, transparent 70%),
+    radial-gradient(circle 50px at 260px 550px, rgba(249,224,229,.15) 0%, transparent 70%);
+  pointer-events:none;
+  z-index:0;
+}
+
+.app{max-width:1060px;margin:0 auto;min-height:100vh;position:relative;z-index:1}
+
+/* ─── Header ─── */
+.header{
+  background:var(--ink);
+  padding:0;
+  position:relative;
+  overflow:hidden;
+}
+.header-inner{padding:1.1rem 1.4rem .9rem;position:relative;z-index:2}
+.header-deco{
+  position:absolute;top:0;right:0;bottom:0;width:260px;
+  pointer-events:none;z-index:1;opacity:.55;
+}
+.header-title{
+  font-family:'Noto Serif',Georgia,serif;
+  font-size:19px;font-weight:600;
+  color:#E8F5EE;
+  letter-spacing:.02em;
+  margin-bottom:2px;
+}
+.header-sub{font-size:11px;color:rgba(111,207,151,.65);letter-spacing:.01em}
+.header-meta{
+  display:flex;gap:14px;margin-top:.6rem;flex-wrap:wrap
+}
+.header-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:20px;
+  background:rgba(111,207,151,.12);
+  border:0.5px solid rgba(111,207,151,.25);
+  font-size:10px;color:rgba(111,207,151,.85);
+  letter-spacing:.02em;
+}
+
+/* ─── Nav ─── */
+.top-nav{
+  background:var(--ink2);
+  display:flex;gap:2px;padding:5px 10px;
+  overflow-x:auto;border-bottom:1px solid rgba(27,107,69,.3);
+}
+.top-nav::-webkit-scrollbar{display:none}
+.nav-btn{
+  padding:5px 13px;font-size:11px;font-weight:500;
+  border-radius:20px;cursor:pointer;
+  background:none;color:rgba(111,207,151,.6);
+  border:0.5px solid transparent;
+  transition:all .15s;white-space:nowrap;
+  font-family:'DM Sans',sans-serif;letter-spacing:.01em;
+}
+.nav-btn:hover{background:rgba(111,207,151,.1);color:var(--jade-light)}
+.nav-btn.active{
+  background:rgba(111,207,151,.18);
+  color:var(--jade-light);
+  border-color:rgba(111,207,151,.35);
+}
+
+/* ─── Content ─── */
+.content{padding:1.25rem 1.4rem;position:relative}
+.page{display:none}.page.active{display:block;animation:rise .22s ease}
+@keyframes rise{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── Decorative section dividers ─── */
+.section-label{
+  font-size:10px;font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--jade);
+  margin-bottom:8px;margin-top:1.25rem;
+  display:flex;align-items:center;gap:8px;
+}
+.section-label:first-child{margin-top:0}
+.section-label::after{
+  content:'';flex:1;height:0.5px;
+  background:linear-gradient(90deg,rgba(27,107,69,.3),transparent);
+}
+
+/* ─── Cards ─── */
+.card{
+  background:rgba(255,255,255,.75);
+  border:0.5px solid var(--border);
+  border-radius:var(--rlg);
+  padding:1rem 1.25rem;
+  margin-bottom:10px;
+  backdrop-filter:blur(4px);
+}
+.card-accent{border-left:2.5px solid var(--jade)}
+.card-sm{
+  background:rgba(255,255,255,.6);
+  border:0.5px solid var(--border);
+  border-radius:var(--r);
+  padding:.6rem .85rem;margin-bottom:6px;
+}
+
+/* ─── Grids ─── */
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.flex{display:flex;align-items:center;gap:8px}
+.fb{display:flex;align-items:center;justify-content:space-between}
+@media(max-width:580px){
+  .grid4{grid-template-columns:1fr 1fr}
+  .grid3{grid-template-columns:1fr 1fr}
+  .grid2{grid-template-columns:1fr}
+}
+
+/* ─── Stat cards ─── */
+.stat{
+  background:rgba(255,255,255,.7);
+  border:0.5px solid var(--border);
+  border-radius:var(--r);
+  padding:.8rem;text-align:center;
+  position:relative;overflow:hidden;
+}
+.stat::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--jade),var(--jade-light));
+}
+.stat-n{
+  font-family:'Noto Serif',serif;
+  font-size:22px;font-weight:600;
+  color:var(--jade);line-height:1.1;
+}
+.stat-l{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.03em}
+
+/* ─── Text helpers ─── */
+.t-sm{font-size:12px}.t-xs{font-size:11px}.bold{font-weight:500}
+.t-jade{color:var(--jade)}.t-gold{color:var(--gold)}.t-red{color:#8B1A1A}
+.t-muted{color:var(--text2)}
+
+/* ─── Badges ─── */
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500;letter-spacing:.01em}
+.badge-jade{background:var(--jade-pale);color:#085041}
+.badge-red{background:#FCEBEB;color:#7A1A1A}
+.badge-amber{background:#FBF5E6;color:#7A5010}
+.badge-blue{background:#EAF0FB;color:#1A3A7A}
+.badge-gray{background:var(--bg2);color:var(--text3);border:0.5px solid var(--border)}
+.badge-must{background:var(--blossom);color:#7A2030}
+.badge-ink{background:var(--ink);color:var(--jade-light)}
+
+/* ─── Check rows ─── */
+.check-row{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:7px 0;border-bottom:0.5px solid var(--border);
+  cursor:pointer;transition:opacity .12s;
+}
+.check-row:last-child{border-bottom:none}
+.check-row:hover{opacity:.75}
+.checkbox{
+  width:16px;height:16px;border-radius:4px;
+  border:1.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:1px;transition:all .15s;
+}
+.checkbox.done{background:var(--jade);border-color:var(--jade)}
+.check-label{font-size:13px;line-height:1.4}
+.check-label.done{text-decoration:line-through;color:var(--text3)}
+.check-sub{font-size:11px;color:var(--text3);margin-top:1px}
+
+/* ─── Calendar ─── */
+.cal-outer{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.cal-grid{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  gap:5px;margin-bottom:1rem;min-width:560px;
+}
+.cal-header{
+  font-size:9px;font-weight:500;letter-spacing:.07em;
+  color:var(--text3);text-align:center;padding:4px 0;
+}
+.cal-day{
+  border-radius:var(--r);padding:6px 5px;min-height:82px;
+  border:0.5px solid var(--border);
+  background:rgba(255,255,255,.65);
+  cursor:pointer;transition:all .15s;position:relative;
+  overflow:hidden;
+}
+.cal-day::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:transparent;transition:background .15s;
+}
+.cal-day:hover{border-color:var(--border2);background:rgba(255,255,255,.9)}
+.cal-day:hover::after{background:var(--jade-mid)}
+.cal-day.active-day{border-color:var(--jade);border-width:1px;background:#fff}
+.cal-day.active-day::after{background:var(--jade)}
+.cal-day.empty{background:transparent;border-color:transparent;cursor:default;min-height:0}
+.cal-day.empty::after{display:none}
+.cal-date{
+  font-size:9px;font-weight:500;color:var(--text3);
+  margin-bottom:3px;font-family:'Noto Serif',serif;
+}
+.cal-city{
+  font-size:8.5px;font-weight:500;
+  padding:1px 4px;border-radius:3px;
+  margin-bottom:3px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;
+  display:block;
+}
+.cal-items{font-size:8.5px;color:var(--text3);line-height:1.45}
+.cal-custom-items{font-size:8px;color:var(--jade);line-height:1.4;margin-top:2px}
+
+/* City label colors — ink+jade palette */
+.city-shanghai{background:#FAECE7;color:#7A2A10}
+.city-suzhou{background:#FBF5E0;color:#6B4A10}
+.city-huangshan{background:#FBF0D8;color:#6B4010}
+.city-hangzhou{background:var(--jade-pale);color:#085041}
+.city-jiande{background:#EAF3DE;color:#27500A}
+.city-beijing{background:#FCEBEB;color:#7A1A1A}
+.city-taiwan{background:#EAF0FB;color:#1A3A7A}
+.city-depart{background:var(--bg2);color:var(--text3)}
+
+/* ─── Day edit modal (inline panel) ─── */
+.day-panel{
+  background:rgba(255,255,255,.9);
+  border:0.5px solid var(--border);
+  border-radius:var(--rlg);
+  padding:1.1rem 1.25rem;
+  margin-top:.75rem;
+  border-top:3px solid var(--jade);
+}
+.day-panel-title{
+  font-family:'Noto Serif',serif;
+  font-size:16px;font-weight:600;
+  color:var(--ink);margin-bottom:.85rem;
+}
+.activity-row{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:6px 0;border-bottom:0.5px solid var(--border);
+}
+.activity-row:last-child{border-bottom:none}
+.act-time{font-size:11px;color:var(--text3);width:52px;flex-shrink:0;padding-top:2px}
+.act-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.act-text{font-size:13px;line-height:1.4}
+
+/* Edit controls */
+.edit-zone{
+  background:var(--jade-mist);
+  border:0.5px dashed var(--border2);
+  border-radius:var(--r);
+  padding:.75rem;margin-top:.75rem;
+}
+.edit-zone-title{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--jade);margin-bottom:8px}
+.custom-item-row{
+  display:flex;align-items:center;gap:6px;
+  padding:5px 0;border-bottom:0.5px solid var(--border);font-size:12px;
+}
+.custom-item-row:last-of-type{border-bottom:none}
+.del-btn{
+  width:18px;height:18px;border-radius:50%;
+  background:none;border:0.5px solid var(--border2);
+  color:var(--text3);cursor:pointer;font-size:12px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .15s;line-height:1;
+}
+.del-btn:hover{background:#FCEBEB;border-color:#C0A0A0;color:#8B1A1A}
+.edit-input{
+  flex:1;border:0.5px solid var(--border2);border-radius:6px;
+  padding:6px 9px;font-size:12px;font-family:'DM Sans',sans-serif;
+  color:var(--text);background:#fff;
+}
+.edit-input:focus{outline:none;border-color:var(--jade-mid)}
+.edit-time-input{
+  width:52px;border:0.5px solid var(--border2);border-radius:6px;
+  padding:6px 6px;font-size:12px;font-family:'DM Sans',sans-serif;
+  color:var(--text3);background:#fff;
+}
+.edit-time-input:focus{outline:none;border-color:var(--jade-mid)}
+.icon-btn{
+  padding:5px 11px;border:0.5px solid var(--border2);border-radius:6px;
+  font-size:11px;cursor:pointer;background:#fff;
+  color:var(--jade);font-family:'DM Sans',sans-serif;
+  transition:all .15s;display:inline-flex;align-items:center;gap:5px;
+}
+.icon-btn:hover{background:var(--jade-pale);border-color:var(--jade)}
+.icon-btn.primary{background:var(--jade);color:#fff;border-color:var(--jade)}
+.icon-btn.primary:hover{background:var(--jade-mid)}
+.icon-btn.danger{color:#8B1A1A;border-color:rgba(139,26,26,.25)}
+.icon-btn.danger:hover{background:#FCEBEB}
+
+/* ─── Food ─── */
+.food-card{
+  background:rgba(255,255,255,.7);border:0.5px solid var(--border);
+  border-radius:var(--r);padding:.65rem .85rem;
+  cursor:pointer;transition:all .15s;margin-bottom:5px;
+}
+.food-card:hover{border-color:var(--border2);background:rgba(255,255,255,.9)}
+.food-card.tried{background:var(--jade-pale);border-color:var(--jade-mid)}
+.food-name{font-size:13px;font-weight:500;color:var(--ink)}
+.food-desc{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.4}
+
+/* ─── Hotels ─── */
+.hotel-card{
+  border-radius:var(--rlg);padding:1rem;
+  border:0.5px solid var(--border);
+  background:rgba(255,255,255,.75);
+  margin-bottom:10px;
+  border-left:3px solid var(--jade);
+}
+.hotel-name{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:4px;font-family:'Noto Serif',serif}
+.hotel-conf{
+  font-family:monospace;font-size:11px;
+  background:var(--jade-pale);
+  padding:2px 8px;border-radius:4px;color:var(--jade);display:inline-block;
+}
+.cost-big{font-size:18px;font-weight:600;font-family:'Noto Serif',serif}
+
+/* ─── Budget bars ─── */
+.bbar-wrap{height:5px;background:var(--border);border-radius:3px;flex:1;overflow:hidden;margin:0 8px}
+.bbar-fill{height:100%;border-radius:3px;background:var(--jade);transition:width .5s}
+
+/* ─── Taiwan options ─── */
+.option-card{
+  border:1px solid var(--border);border-radius:var(--rlg);
+  padding:1rem;cursor:pointer;transition:all .2s;margin-bottom:8px;
+}
+.option-card:hover:not(.selected){border-color:var(--border2)}
+.option-card.selected{border-color:var(--jade);background:var(--jade-mist)}
+.option-title{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:5px;font-family:'Noto Serif',serif}
+
+/* ─── Pills ─── */
+.pax-pill{
+  display:inline-flex;padding:3px 11px;border-radius:20px;
+  font-size:11px;font-weight:500;border:0.5px solid var(--border);
+  cursor:pointer;margin:0 3px 3px 0;background:none;
+  color:var(--text3);transition:all .15s;font-family:'DM Sans',sans-serif;
+}
+.pax-pill.on{background:var(--jade);color:#fff;border-color:var(--jade)}
+
+/* ─── Inner tabs ─── */
+.inner-tabs{display:flex;border-bottom:0.5px solid var(--border);margin-bottom:1rem;gap:0}
+.inner-tab{
+  padding:.45rem .9rem;font-size:12px;cursor:pointer;
+  border:none;background:none;color:var(--text3);
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  transition:color .15s;font-family:'DM Sans',sans-serif;
+}
+.inner-tab.active{color:var(--jade);border-bottom-color:var(--jade);font-weight:500}
+
+/* ─── Inputs ─── */
+.add-input{
+  width:100%;border:0.5px solid var(--border2);border-radius:var(--r);
+  padding:7px 10px;font-size:13px;font-family:'DM Sans',sans-serif;
+  color:var(--text);background:#fff;transition:border-color .15s;
+}
+.add-input:focus{outline:none;border-color:var(--jade)}
+.add-btn{
+  padding:6px 14px;border:0.5px solid var(--border2);border-radius:var(--r);
+  font-size:12px;cursor:pointer;background:none;color:var(--jade);
+  transition:all .15s;margin-top:5px;font-family:'DM Sans',sans-serif;font-weight:500;
+}
+.add-btn:hover{background:var(--jade-pale);border-color:var(--jade)}
+.ask-btn{
+  padding:5px 12px;border:0.5px solid var(--border);border-radius:20px;
+  font-size:11px;cursor:pointer;background:none;color:var(--text3);
+  margin-top:8px;display:inline-flex;align-items:center;gap:4px;
+  transition:all .15s;font-family:'DM Sans',sans-serif;
+}
+.ask-btn:hover{background:var(--jade-pale);color:var(--jade)}
+.notes-ta{
+  width:100%;border:0.5px solid var(--border2);border-radius:var(--r);
+  padding:.7rem;font-size:13px;font-family:'DM Sans',sans-serif;
+  color:var(--text);background:#fff;resize:vertical;min-height:70px;line-height:1.6;
+}
+.notes-ta:focus{outline:none;border-color:var(--jade)}
+
+/* ─── Route bar ─── */
+.route-wrap{
+  display:flex;align-items:center;flex-wrap:wrap;
+  padding:.85rem 1rem;
+  background:rgba(255,255,255,.7);
+  border:0.5px solid var(--border);border-radius:var(--rlg);
+  margin-bottom:10px;overflow-x:auto;gap:0;
+}
+.route-city{text-align:center;padding:0 5px;flex-shrink:0}
+.route-line{flex:1;height:1.5px;min-width:10px;border-radius:1px;background:var(--jade-mid);opacity:.4}
+
+/* ─── Blossom deco in cards ─── */
+.blossom-card{position:relative;overflow:hidden}
+.blossom-card::before{
+  content:'';position:absolute;top:-10px;right:-10px;
+  width:80px;height:80px;
+  background:radial-gradient(circle,rgba(249,224,229,.5) 0%,transparent 70%);
+  pointer-events:none;
+}
+
+/* ─── Scroll ─── */
+.scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.scroll-x::-webkit-scrollbar{height:3px}
+.scroll-x::-webkit-scrollbar-track{background:transparent}
+.scroll-x::-webkit-scrollbar-thumb{background:var(--jade-mid);border-radius:2px}
+
+@media print{.top-nav,.ask-btn,.add-btn,.icon-btn,.edit-zone{display:none!important}.page{display:block!important}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ═══ HEADER ═══ -->
+<div class="header">
+  <svg class="header-deco" viewBox="0 0 260 90" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMaxYMid meet">
+    <!-- Bamboo stalks -->
+    <rect x="200" y="0" width="3" height="90" fill="#6FCF97" rx="1.5"/>
+    <rect x="212" y="5" width="2" height="85" fill="#6FCF97" rx="1" opacity=".6"/>
+    <rect x="222" y="0" width="2.5" height="90" fill="#6FCF97" rx="1.2" opacity=".5"/>
+    <rect x="233" y="8" width="1.5" height="82" fill="#6FCF97" rx="1" opacity=".4"/>
+    <!-- Bamboo nodes -->
+    <rect x="198" y="22" width="7" height="2" rx="1" fill="#6FCF97"/>
+    <rect x="198" y="48" width="7" height="2" rx="1" fill="#6FCF97"/>
+    <rect x="198" y="70" width="7" height="2" rx="1" fill="#6FCF97"/>
+    <rect x="210" y="30" width="5" height="1.5" rx="1" fill="#6FCF97" opacity=".6"/>
+    <rect x="210" y="58" width="5" height="1.5" rx="1" fill="#6FCF97" opacity=".6"/>
+    <rect x="220" y="18" width="5" height="1.5" rx="1" fill="#6FCF97" opacity=".5"/>
+    <rect x="220" y="52" width="5" height="1.5" rx="1" fill="#6FCF97" opacity=".5"/>
+    <!-- Bamboo leaves -->
+    <ellipse cx="197" cy="14" rx="14" ry="5" fill="#6FCF97" opacity=".5" transform="rotate(-35 197 14)"/>
+    <ellipse cx="207" cy="8" rx="12" ry="4" fill="#6FCF97" opacity=".35" transform="rotate(25 207 8)"/>
+    <ellipse cx="196" cy="40" rx="13" ry="4.5" fill="#6FCF97" opacity=".4" transform="rotate(-45 196 40)"/>
+    <ellipse cx="218" cy="24" rx="11" ry="4" fill="#6FCF97" opacity=".3" transform="rotate(30 218 24)"/>
+    <!-- Cherry blossom petals -->
+    <circle cx="175" cy="20" r="4" fill="#F9E0E5" opacity=".7"/>
+    <circle cx="183" cy="15" r="3" fill="#F9E0E5" opacity=".5"/>
+    <circle cx="170" cy="30" r="3.5" fill="#F9E0E5" opacity=".45"/>
+    <circle cx="180" cy="38" r="2.5" fill="#E8A0B0" opacity=".4"/>
+    <circle cx="165" cy="22" r="2" fill="#F9E0E5" opacity=".35"/>
+    <!-- Ink wash circles -->
+    <circle cx="140" cy="50" r="28" fill="none" stroke="#6FCF97" stroke-width=".5" opacity=".2"/>
+    <circle cx="140" cy="50" r="18" fill="none" stroke="#6FCF97" stroke-width=".5" opacity=".15"/>
+  </svg>
+
+  <div class="header-inner">
+    <div class="header-title">中国 · 台湾 — China &amp; Taiwan 2026</div>
+    <div class="header-sub">Adityaa · Jeffrey · Mani · Andrew · April 2 → April 18</div>
+    <div class="header-meta">
+      <span class="header-pill">✈ PHX → Shanghai → Taipei → PHX</span>
+      <span class="header-pill">🏨 6 properties booked</span>
+      <span class="header-pill">👥 Adityaa · Jeffrey · Mani · Andrew</span>
+      <span class="header-pill">17 days</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NAV ═══ -->
+<div class="top-nav">
+  <button class="nav-btn active" onclick="showPage('overview',this)">Overview</button>
+  <button class="nav-btn" onclick="showPage('calendar',this)">Calendar</button>
+  <button class="nav-btn" onclick="showPage('hotels',this)">Hotels</button>
+  <button class="nav-btn" onclick="showPage('food',this)">Food</button>
+  <button class="nav-btn" onclick="showPage('todo',this)">To-Do</button>
+  <button class="nav-btn" onclick="showPage('budget',this)">Budget</button>
+  <button class="nav-btn" onclick="showPage('taiwan',this)">Taiwan Plan</button>
+  <button class="nav-btn" onclick="showPage('packing',this)">Packing</button>
+</div>
+
+<div class="content">
+
+<!-- ═══════════ OVERVIEW ═══════════ -->
+<div class="page active" id="page-overview">
+  <div class="grid4" style="margin-bottom:1rem">
+    <div class="stat"><div class="stat-n">17</div><div class="stat-l">days total</div></div>
+    <div class="stat"><div class="stat-n" id="ov-checked">0</div><div class="stat-l">tasks done</div></div>
+    <div class="stat"><div class="stat-n" id="ov-food">0</div><div class="stat-l">foods tried</div></div>
+    <div class="stat"><div class="stat-n">4</div><div class="stat-l">travelers</div></div>
+  </div>
+
+  <div class="section-label">Route</div>
+  <div class="route-wrap">
+    <div class="route-city"><div class="t-sm bold">Phoenix</div><div class="t-xs t-muted">Apr 1</div></div>
+    <div class="route-line"></div>
+    <div class="route-city"><span class="badge city-shanghai" style="font-size:11px;padding:3px 8px">Shanghai</span><div class="t-xs t-muted" style="margin-top:3px">5 nights</div></div>
+    <div class="route-line"></div>
+    <div class="route-city"><span class="badge city-huangshan" style="font-size:11px;padding:3px 8px">Huangshan</span><div class="t-xs t-muted" style="margin-top:3px">2 nights</div></div>
+    <div class="route-line"></div>
+    <div class="route-city"><span class="badge city-hangzhou" style="font-size:11px;padding:3px 8px">Hangzhou</span><div class="t-xs t-muted" style="margin-top:3px">4 nights</div></div>
+    <div class="route-line"></div>
+    <div class="route-city"><span class="badge city-beijing" style="font-size:11px;padding:3px 8px">Beijing</span><div class="t-xs t-muted" style="margin-top:3px">2 nights</div></div>
+    <div class="route-line"></div>
+    <div class="route-city"><span class="badge city-taiwan" style="font-size:11px;padding:3px 8px">Taipei</span><div class="t-xs t-muted" style="margin-top:3px">3 nights</div></div>
+    <div class="route-line"></div>
+    <div class="route-city"><div class="t-sm bold">Phoenix</div><div class="t-xs t-muted">Apr 18</div></div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <div class="section-label">Hotels confirmed</div>
+      <div class="card-sm fb"><span class="t-sm bold">Shanghai — Holiday Inn Jing'an</span><span class="badge badge-jade">Confirmed</span></div>
+      <div class="card-sm fb"><span class="t-sm bold">Huangshan Base — Yunshan Villa</span><span class="badge badge-jade">Confirmed</span></div>
+      <div class="card-sm fb"><span class="t-sm bold">Huangshan Peak — Bai Yun Hotel</span><span class="badge badge-jade">Confirmed</span></div>
+      <div class="card-sm fb"><span class="t-sm bold">Hangzhou — Homeinn Plus West Lake</span><span class="badge badge-jade">Confirmed</span></div>
+      <div class="card-sm fb"><span class="t-sm bold">Beijing — East Sacred Hotel</span><span class="badge badge-jade">Confirmed</span></div>
+      <div class="card-sm fb"><span class="t-sm bold">Taipei — Airbnb Ximen 西門里</span><span class="badge badge-amber">Pending</span></div>
+      <div class="card-sm" style="margin-top:4px">
+        <div class="t-xs t-muted">Confirmed hotel spend (2 rooms)</div>
+        <div style="font-size:22px;font-weight:600;font-family:'Noto Serif',serif;color:var(--jade);margin-top:2px">$3,988</div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Still to book</div>
+      <div class="card-sm fb"><span class="t-sm">Great Wall Mutianyu tickets</span><span class="badge badge-red">Urgent</span></div>
+      <div class="card-sm fb"><span class="t-sm">Forbidden City tickets</span><span class="badge badge-red">Urgent</span></div>
+      <div class="card-sm fb"><span class="t-sm">Huangshan Tiandu Peak permit</span><span class="badge badge-red">Urgent</span></div>
+      <div class="card-sm fb"><span class="t-sm">5 train tickets</span><span class="badge badge-amber">In progress</span></div>
+      <div class="card-sm fb"><span class="t-sm">Luggage storage — Huangshan base</span><span class="badge badge-gray">Look into</span></div>
+    </div>
+  </div>
+
+  <div class="section-label">Flights confirmed</div>
+  <div class="card blossom-card">
+    <div class="grid2">
+      <div>
+        <div class="fb"><span class="bold t-sm">PHX → PVG Shanghai</span><span class="badge badge-jade">Booked</span></div>
+        <div class="t-xs t-muted" style="margin-top:4px">Apr 1 dep 7:05am · Arrive Apr 2 ~4:05pm · Delta DL3870+DL39 · LAX stopover</div>
+      </div>
+      <div>
+        <div class="fb"><span class="bold t-sm">TPE Taipei → PHX</span><span class="badge badge-jade">Booked</span></div>
+        <div class="t-xs t-muted" style="margin-top:4px">Apr 18 dep 9:35am · Arrive 11:10am · Delta DL68+DL2419 · SEA stopover</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Group notes</div>
+  <textarea class="notes-ta" placeholder="Shared notes for the whole group..."></textarea>
+</div>
+
+<!-- ═══════════ CALENDAR ═══════════ -->
+<div class="page" id="page-calendar">
+  <div style="margin-bottom:1rem" class="fb">
+    <div>
+      <div class="bold" style="font-family:'Noto Serif',serif;font-size:16px;margin-bottom:2px">April 2026</div>
+      <div class="t-xs t-muted">Click any day to view details and add or remove activities.</div>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <span class="t-xs t-muted">Selected:</span>
+      <span id="cal-selected-label" class="badge badge-ink">none</span>
+    </div>
+  </div>
+
+  <div class="scroll-x">
+  <div class="cal-grid">
+    <div class="cal-header">SUN</div><div class="cal-header">MON</div><div class="cal-header">TUE</div>
+    <div class="cal-header">WED</div><div class="cal-header">THU</div><div class="cal-header">FRI</div><div class="cal-header">SAT</div>
+    <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
+    <div class="cal-day" id="cday-1" onclick="selectDay(1)"><div class="cal-date">Apr 1</div><div class="cal-city city-depart">PHX depart</div><div class="cal-items">7:05am flight</div><div class="cal-custom-items" id="cc-1"></div></div>
+    <div class="cal-day" id="cday-2" onclick="selectDay(2)"><div class="cal-date">Apr 2</div><div class="cal-city city-shanghai">Shanghai</div><div class="cal-items">Arrive ~4pm · Check in</div><div class="cal-custom-items" id="cc-2"></div></div>
+    <div class="cal-day" id="cday-3" onclick="selectDay(3)"><div class="cal-date">Apr 3</div><div class="cal-city city-shanghai">Shanghai</div><div class="cal-items">Bund · Nanjing Rd · Yu Yuan</div><div class="cal-custom-items" id="cc-3"></div></div>
+    <div class="cal-day" id="cday-4" onclick="selectDay(4)"><div class="cal-date">Apr 4</div><div class="cal-city city-shanghai">Shanghai</div><div class="cal-items">French Concession · Tianzifang</div><div class="cal-custom-items" id="cc-4"></div></div>
+    <div class="cal-day" id="cday-5" onclick="selectDay(5)"><div class="cal-date">Apr 5</div><div class="cal-city city-suzhou">Suzhou Day Trip</div><div class="cal-items">Master Nets · Tiger Hill</div><div class="cal-custom-items" id="cc-5"></div></div>
+    <div class="cal-day" id="cday-6" onclick="selectDay(6)"><div class="cal-date">Apr 6</div><div class="cal-city city-shanghai">Shanghai</div><div class="cal-items">AP Plaza · INS Park</div><div class="cal-custom-items" id="cc-6"></div></div>
+    <div class="cal-day" id="cday-7" onclick="selectDay(7)"><div class="cal-date">Apr 7</div><div class="cal-city city-huangshan">→ Huangshan</div><div class="cal-items">Train EOD · Yunshan Villa</div><div class="cal-custom-items" id="cc-7"></div></div>
+    <div class="cal-day" id="cday-8" onclick="selectDay(8)"><div class="cal-date">Apr 8</div><div class="cal-city city-huangshan">Huangshan Peak</div><div class="cal-items">Yungu cable · East Route</div><div class="cal-custom-items" id="cc-8"></div></div>
+    <div class="cal-day" id="cday-9" onclick="selectDay(9)"><div class="cal-date">Apr 9</div><div class="cal-city city-huangshan">HM → HZ</div><div class="cal-items">West Sea Canyon · Hot Springs</div><div class="cal-custom-items" id="cc-9"></div></div>
+    <div class="cal-day" id="cday-10" onclick="selectDay(10)"><div class="cal-date">Apr 10</div><div class="cal-city city-hangzhou">Hangzhou</div><div class="cal-items">West Lake clockwise · Lingyin</div><div class="cal-custom-items" id="cc-10"></div></div>
+    <div class="cal-day" id="cday-11" onclick="selectDay(11)"><div class="cal-date">Apr 11</div><div class="cal-city city-jiande">Jiande Day Trip</div><div class="cal-items">Maling Skyview · Balcony City</div><div class="cal-custom-items" id="cc-11"></div></div>
+    <div class="cal-day" id="cday-12" onclick="selectDay(12)"><div class="cal-date">Apr 12</div><div class="cal-city city-hangzhou">Hangzhou</div><div class="cal-items">Bamboo Forest · Longjing Tea</div><div class="cal-custom-items" id="cc-12"></div></div>
+    <div class="cal-day" id="cday-13" onclick="selectDay(13)"><div class="cal-date">Apr 13</div><div class="cal-city city-hangzhou">HZ → Beijing</div><div class="cal-items">City explore · 6pm train</div><div class="cal-custom-items" id="cc-13"></div></div>
+    <div class="cal-day" id="cday-14" onclick="selectDay(14)"><div class="cal-date">Apr 14</div><div class="cal-city city-beijing">Beijing</div><div class="cal-items">Great Wall — Mutianyu</div><div class="cal-custom-items" id="cc-14"></div></div>
+    <div class="cal-day" id="cday-15" onclick="selectDay(15)"><div class="cal-date">Apr 15</div><div class="cal-city city-beijing">BJ → Taipei</div><div class="cal-items">Forbidden City · fly 7:50pm</div><div class="cal-custom-items" id="cc-15"></div></div>
+    <div class="cal-day" id="cday-16" onclick="selectDay(16)"><div class="cal-date">Apr 16</div><div class="cal-city city-taiwan">Taipei</div><div class="cal-items">Arrive · Ximending · Night Mkt</div><div class="cal-custom-items" id="cc-16"></div></div>
+    <div class="cal-day" id="cday-17" onclick="selectDay(17)"><div class="cal-date">Apr 17</div><div class="cal-city city-taiwan">Taipei</div><div class="cal-items">City sights / day trip</div><div class="cal-custom-items" id="cc-17"></div></div>
+    <div class="cal-day" id="cday-18" onclick="selectDay(18)"><div class="cal-date">Apr 18</div><div class="cal-city city-depart">→ Phoenix</div><div class="cal-items">Check out 11am · 9:35am flight</div><div class="cal-custom-items" id="cc-18"></div></div>
+    <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
+  </div>
+  </div>
+
+  <!-- Day detail + edit panel -->
+  <div id="day-detail"></div>
+</div>
+
+<!-- ═══════════ HOTELS ═══════════ -->
+<div class="page" id="page-hotels">
+  <div class="section-label">All confirmed bookings — $3,988 total (2 rooms)</div>
+  <div class="hotel-card">
+    <div class="fb"><div class="hotel-name">Holiday Inn Shanghai Jing'an by IHG</div><span class="badge badge-jade">Confirmed ✓</span></div>
+    <div class="t-xs t-muted" style="margin:3px 0">No.1738 Zhongxing Road, Shanghai 200070</div>
+    <div class="grid2" style="margin-top:8px;gap:6px">
+      <div class="card-sm"><div class="t-xs t-muted">Room 1 — Adityaa</div><div class="hotel-conf" style="margin:3px 0">67868940</div><div class="t-xs t-muted">Thu Apr 2 → Tue Apr 7 · 5 nights</div><div class="cost-big t-jade" style="margin-top:4px">$623.84</div></div>
+      <div class="card-sm"><div class="t-xs t-muted">Room 2 — Jeffrey</div><div class="hotel-conf" style="margin:3px 0">64171494</div><div class="t-xs t-muted">Thu Apr 2 → Tue Apr 7 · 5 nights</div><div class="cost-big t-jade" style="margin-top:4px">$623.84</div></div>
+    </div>
+    <div class="t-xs t-muted" style="margin-top:6px">⚠ Free cancellation until Apr 2 6:00pm local time</div>
+  </div>
+  <div class="hotel-card">
+    <div class="fb"><div class="hotel-name">Yunshan Villa — Huangshan Base (Jade Valley)</div><span class="badge badge-jade">Confirmed ✓</span></div>
+    <div class="t-xs t-muted" style="margin:3px 0">B-007 Jade Valley, Huangshan Scenic Area</div>
+    <div class="grid2" style="margin-top:8px;gap:6px">
+      <div class="card-sm"><div class="t-xs t-muted">Room 1 — Adityaa · Comfort Double</div><div class="hotel-conf" style="margin:3px 0">H-T3XS8D2W6V5K</div><div class="t-xs t-muted">Tue Apr 7 → Wed Apr 8</div><div class="cost-big t-jade" style="margin-top:4px">$72.14</div></div>
+      <div class="card-sm"><div class="t-xs t-muted">Room 2 — Jeffrey · Loft Suite</div><div class="hotel-conf" style="margin:3px 0">H-VLHPLHWNBWBF</div><div class="t-xs t-muted">Tue Apr 7 → Wed Apr 8</div><div class="cost-big t-jade" style="margin-top:4px">$79.67</div></div>
+    </div>
+    <div class="t-xs t-muted" style="margin-top:6px;color:#8B1A1A">⚠ Refundable before Apr 4 — act soon</div>
+  </div>
+  <div class="hotel-card">
+    <div class="fb"><div class="hotel-name">Huangshan Bai Yun Hotel — Mountain Peak</div><span class="badge badge-jade">Confirmed ✓</span></div>
+    <div class="t-xs t-muted" style="margin:3px 0">Inside Tianhai Scenic Area · Hotel Zone A · Tel: 86-559-2590999</div>
+    <div class="grid2" style="margin-top:8px;gap:6px">
+      <div class="card-sm"><div class="t-xs t-muted">Room 1 — Adityaa · Economy Nature View</div><div class="hotel-conf" style="margin:3px 0">H-XHTMSPQ785NK</div><div class="t-xs t-muted">Wed Apr 8 2pm → Thu Apr 9 noon</div><div class="cost-big t-jade" style="margin-top:4px">$343.12</div></div>
+      <div class="card-sm"><div class="t-xs t-muted">Room 2 — Jeffrey · Economy Nature View</div><div class="hotel-conf" style="margin:3px 0">H-SVDVPCLQ6PZ3</div><div class="t-xs t-muted">Wed Apr 8 2pm → Thu Apr 9 noon</div><div class="cost-big t-jade" style="margin-top:4px">$343.12</div></div>
+    </div>
+    <div class="t-xs t-muted" style="margin-top:6px;color:#8B1A1A">⚠ Refund deadline Apr 1 passed — non-refundable</div>
+  </div>
+  <div class="hotel-card">
+    <div class="fb"><div class="hotel-name">Homeinn Plus Hangzhou West Lake Pedestrian St.</div><span class="badge badge-jade">Confirmed ✓</span></div>
+    <div class="t-xs t-muted" style="margin:3px 0">No.85 Youdian Road, Shangcheng District · +86-571-56069666-9</div>
+    <div class="grid2" style="margin-top:8px;gap:6px">
+      <div class="card-sm"><div class="t-xs t-muted">2 Rooms · 4 Nights</div><div class="hotel-conf" style="margin:3px 0">165810913122144 · PIN 9534</div><div class="t-xs t-muted">Thu Apr 9 → Mon Apr 13</div><div class="cost-big t-jade" style="margin-top:4px">$574.92</div></div>
+      <div class="card-sm"><div class="t-xs t-muted">Room details</div><div class="t-sm bold" style="margin-top:4px">2-bed twin · city view · floors 2–6</div><div class="t-xs t-muted" style="margin-top:3px">Breakfast buffet CNY 38 (~$5.48/pp)</div><div class="t-xs" style="margin-top:2px;color:var(--jade)">Free cancel before 6pm Apr 9</div></div>
+    </div>
+  </div>
+  <div class="hotel-card">
+    <div class="fb"><div class="hotel-name">East Sacred Hotel — Wangfujing, Beijing</div><span class="badge badge-jade">Confirmed ✓</span></div>
+    <div class="t-xs t-muted" style="margin:3px 0">Jia No.33 Dong Dan San Tiao, Beijing · 86-10-65266638</div>
+    <div class="grid2" style="margin-top:8px;gap:6px">
+      <div class="card-sm"><div class="t-xs t-muted">2 Rooms · 2 Twin beds each</div><div class="hotel-conf" style="margin:3px 0">H-JS7VGXL97J62</div><div class="t-xs t-muted">Mon Apr 13 9:30am → Wed Apr 15 2pm</div><div class="cost-big t-jade" style="margin-top:4px">$648.08</div></div>
+      <div class="card-sm"><div class="t-xs t-muted">Cancellation</div><div class="t-sm" style="margin-top:4px">Free before Apr 10 6pm</div><div class="t-xs t-muted">Apr 10–13: 1 night penalty · After Apr 13: no refund</div></div>
+    </div>
+  </div>
+  <div class="hotel-card">
+    <div class="fb"><div class="hotel-name">Home in 西門里 — Airbnb Ximen, Taipei</div><span class="badge badge-amber">Confirm soon</span></div>
+    <div class="t-xs t-muted" style="margin:3px 0">Hosted by Yao · Princess/Ximen elevator · 4–8 persons</div>
+    <div class="grid2" style="margin-top:8px;gap:6px">
+      <div class="card-sm"><div class="t-xs t-muted">Entire place · 3 nights</div><div class="t-sm bold" style="margin-top:4px">Wed Apr 15 3pm → Sat Apr 18 11am</div><div class="cost-big t-gold" style="margin-top:4px">$831</div></div>
+      <div class="card-sm"><div class="t-xs t-muted">Action needed</div><div class="t-sm" style="margin-top:4px">Verify booking is confirmed with host Yao before departure</div></div>
+    </div>
+  </div>
+  <div class="card-sm fb"><span class="t-sm bold">Total confirmed hotel spend</span><span style="font-size:18px;font-weight:600;font-family:'Noto Serif',serif;color:var(--jade)">$3,988</span></div>
+</div>
+
+<!-- ═══════════ FOOD ═══════════ -->
+<div class="page" id="page-food">
+  <div class="inner-tabs">
+    <button class="inner-tab active" onclick="showFoodCity('shanghai',this)">Shanghai</button>
+    <button class="inner-tab" onclick="showFoodCity('hangzhou',this)">Hangzhou</button>
+    <button class="inner-tab" onclick="showFoodCity('beijing',this)">Beijing</button>
+    <button class="inner-tab" onclick="showFoodCity('taipei',this)">Taipei</button>
+  </div>
+  <div id="food-content"></div>
+</div>
+
+<!-- ═══════════ TO-DO ═══════════ -->
+<div class="page" id="page-todo">
+  <div class="inner-tabs">
+    <button class="inner-tab active" onclick="showTodoSection('bookings',this)">Bookings</button>
+    <button class="inner-tab" onclick="showTodoSection('prep',this)">Pre-Trip Prep</button>
+    <button class="inner-tab" onclick="showTodoSection('logistics',this)">Logistics</button>
+  </div>
+  <div id="todo-content"></div>
+</div>
+
+<!-- ═══════════ BUDGET ═══════════ -->
+<div class="page" id="page-budget">
+  <div class="grid4" style="margin-bottom:1rem">
+    <div class="stat"><div class="stat-n">$3,988</div><div class="stat-l">hotels confirmed</div></div>
+    <div class="stat"><div class="stat-n">~$600</div><div class="stat-l">est. food total</div></div>
+    <div class="stat"><div class="stat-n">~$500</div><div class="stat-l">transport est.</div></div>
+    <div class="stat"><div class="stat-n">~$5,500</div><div class="stat-l">est. group total</div></div>
+  </div>
+  <div class="section-label">Hotel spend breakdown</div>
+  <div class="card" id="budget-bars"></div>
+  <div class="section-label">Per person estimate</div>
+  <div class="card">
+    <div class="check-row" style="cursor:default"><div style="flex:1"><div class="t-sm bold">Hotels ÷ travelers</div><div class="t-xs t-muted">$3,988 confirmed</div></div><div class="bold" id="pp-hotels">~$997/pp</div></div>
+    <div class="check-row" style="cursor:default"><div style="flex:1"><div class="t-sm bold">International flights (Delta)</div><div class="t-xs t-muted">PHX↔Shanghai + Taipei→PHX</div></div><div class="bold">~$600–800/pp</div></div>
+    <div class="check-row" style="cursor:default"><div style="flex:1"><div class="t-sm bold">In-country transport</div><div class="t-xs t-muted">5 trains + Beijing→Taipei flight</div></div><div class="bold">~$300–400/pp</div></div>
+    <div class="check-row" style="cursor:default"><div style="flex:1"><div class="t-sm bold">Food (17 days ~$35/day)</div><div class="t-xs t-muted">China cheap, Taiwan moderate</div></div><div class="bold">~$595/pp</div></div>
+    <div class="check-row" style="cursor:default"><div style="flex:1"><div class="t-sm bold">Attractions &amp; entry fees</div><div class="t-xs t-muted">Great Wall, Forbidden City, Huangshan, etc.</div></div><div class="bold">~$150–250/pp</div></div>
+    <div class="check-row" style="cursor:default"><div style="flex:1"><div class="t-sm bold">Shopping &amp; incidentals</div></div><div class="bold">~$200–500/pp</div></div>
+    <div class="check-row" style="border-top:1.5px solid var(--border2);cursor:default"><div style="flex:1"><div class="t-sm bold">Estimated total</div></div><div style="font-size:16px;font-weight:600;font-family:'Noto Serif',serif;color:var(--jade)" id="pp-total">~$2,850–3,550/pp</div></div>
+  </div>
+  <div class="section-label">Adjust group size</div>
+  <div class="card-sm">
+    <button class="pax-pill" id="pax2" onclick="setPax(2)">2 people</button>
+    <button class="pax-pill" id="pax3" onclick="setPax(3)">3 people</button>
+    <button class="pax-pill on" id="pax4" onclick="setPax(4)">4 people</button>
+    <div class="t-xs t-muted" style="margin-top:8px" id="pax-result">Split 4 ways: ~$997/pp hotels. Full estimate: ~$2,850–3,550/pp.</div>
+  </div>
+  <div class="section-label">Track additional expenses</div>
+  <div class="card-sm">
+    <div style="display:flex;gap:6px">
+      <input class="add-input" id="exp-name" placeholder="Expense name" style="flex:2">
+      <input class="add-input" id="exp-amt" placeholder="$" style="flex:1;max-width:75px">
+      <button class="add-btn" onclick="addExpense()" style="margin:0">Add</button>
+    </div>
+    <div id="custom-expenses" style="margin-top:8px"></div>
+  </div>
+</div>
+
+<!-- ═══════════ TAIWAN ═══════════ -->
+<div class="page" id="page-taiwan">
+  <div class="t-sm t-muted" style="margin-bottom:1rem;line-height:1.6">3 full days in Taipei (Apr 15 evening → Apr 18 morning). Vote below and lock in your plan.</div>
+  <div class="option-card selected" id="tw-a" onclick="selectTaiwan('a')">
+    <div class="fb"><div class="option-title">Option A — Just Taipei City</div><span class="badge badge-ink" id="tw-a-badge">Selected ✓</span></div>
+    <div class="t-sm t-muted" style="margin-bottom:5px">CKS Memorial · Ximending · Taipei 101 · Palace Museum · Longshan Temple · Daodaocheng · Beitou Hot Springs · Night Markets</div>
+    <div style="font-size:12px;line-height:1.6"><span style="color:var(--jade);font-weight:500">✓ Pros:</span> Relaxed pace. More food + shopping. Better end-of-trip energy.</div>
+    <div style="font-size:12px;line-height:1.6;margin-top:2px"><span style="color:#8B1A1A;font-weight:500">✗ Cons:</span> No Jiufen, Shifen, or Houtong cat village.</div>
+  </div>
+  <div class="option-card" id="tw-b" onclick="selectTaiwan('b')">
+    <div class="fb"><div class="option-title">Option B — Taipei + Day Trip</div><span class="badge badge-gray" id="tw-b-badge"></span></div>
+    <div class="t-sm t-muted" style="margin-bottom:5px">Day 1: Taipei city sights · Day 2: Jiufen + Shifen sky lanterns + Houtong · Day 3: Night markets + pack</div>
+    <div style="font-size:12px;line-height:1.6"><span style="color:var(--jade);font-weight:500">✓ Pros:</span> Jiufen is stunning. Shifen sky lanterns unforgettable.</div>
+    <div style="font-size:12px;line-height:1.6;margin-top:2px"><span style="color:#8B1A1A;font-weight:500">✗ Cons:</span> More transit at end of a long trip. ~6–7hr day trip.</div>
+  </div>
+  <div class="card-sm">
+    <div class="t-xs t-muted" style="margin-bottom:8px">Group vote:</div>
+    <div id="taiwan-votes" style="display:flex;gap:14px;flex-wrap:wrap"></div>
+  </div>
+  <div class="section-label" style="margin-top:1rem">Taipei checklist</div>
+  <div class="card" id="taipei-todos"></div>
+</div>
+
+<!-- ═══════════ PACKING ═══════════ -->
+<div class="page" id="page-packing">
+  <div class="inner-tabs">
+    <button class="inner-tab active" onclick="showPackSection('essentials',this)">Essentials</button>
+    <button class="inner-tab" onclick="showPackSection('tech',this)">Tech &amp; Apps</button>
+    <button class="inner-tab" onclick="showPackSection('hiking',this)">Huangshan Gear</button>
+    <button class="inner-tab" onclick="showPackSection('docs',this)">Documents</button>
+  </div>
+  <div id="pack-content"></div>
+</div>
+
+</div><!-- /content -->
+</div><!-- /app -->
+
+<script>
+const S={
+  todoState:{},foodTried:{},packDone:{},
+  taiwanChoice:'a',taiwanVotes:{},
+  customExpenses:[],
+  calCustom:{},      // { dayNum: [{time,text}] }
+  calDropped:{},     // { dayNum: [index of dropped base items] }
+  foodCity:'shanghai',todoSection:'bookings',packSection:'essentials',
+};
+
+/* ══════ PAGE NAV ══════ */
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(id==='food') renderFoodCity(S.foodCity);
+  if(id==='todo') renderTodo(S.todoSection);
+  if(id==='packing') renderPacking(S.packSection);
+  if(id==='taiwan') renderTaiwan();
+  if(id==='budget') renderBudgetBars();
+  updateStats();
+}
+
+/* ══════ CALENDAR DATA ══════ */
+const BASE_DAYS={
+  1:{title:'Depart Phoenix',city:'PHX depart',color:'#6B6B6B',items:[{t:'7:05am',a:'Depart PHX — DL3870 to LAX'},{t:'LAX',a:'Layover → DL39 Airbus A350 to PVG'},{t:'Note',a:'Next-day arrival — 18hrs total'}]},
+  2:{title:'Arrive Shanghai',city:'Shanghai',color:'#993C1D',items:[{t:'~4pm',a:'Land at PVG (Pudong)'},{t:'',a:'Immigration + customs'},{t:'',a:'Check in: Holiday Inn Jing\'an (67868940 / 64171494)'},{t:'Eve',a:'First xiaolongbao dinner!'}]},
+  3:{title:'Shanghai Day 1',city:'Shanghai',color:'#993C1D',items:[{t:'Morning',a:'Nanjing Road shopping'},{t:'',a:'The Bund waterfront'},{t:'',a:'People\'s Square · Xintiandi'},{t:'Aft',a:'Yu Yuan Garden (closes 4:30pm!)'},{t:'Night',a:'City God Temple + Bund at night'}]},
+  4:{title:'Shanghai Day 2',city:'Shanghai',color:'#993C1D',items:[{t:'Morning',a:'Jing\'an Temple'},{t:'',a:'French Concession walk'},{t:'Midday',a:'Shopping — Harmay · Wan Fung Gallery'},{t:'Aft',a:'Xujiahui Park · Tianzifang'}]},
+  5:{title:'Suzhou Day Trip',city:'Suzhou',color:'#7A4F10',items:[{t:'Morning',a:'Master of the Nets Garden'},{t:'',a:'Ping Jiang Road canal'},{t:'Midday',a:'Humble Administrator\'s Garden'},{t:'',a:'Tiger Hill · Suzhou Museum'},{t:'Eve',a:'Shantang Street · Silk Factory'}]},
+  6:{title:'Shanghai Day 3',city:'Shanghai',color:'#993C1D',items:[{t:'',a:'AP Plaza — market shopping'},{t:'',a:'Tianan Sunshine Plaza'},{t:'Night',a:'INS Park club'}]},
+  7:{title:'Travel to Huangshan',city:'→ Huangshan',color:'#7A5010',items:[{t:'Morning',a:'Breakfast in Shanghai'},{t:'',a:'Pack light for mountain'},{t:'EOD',a:'Train to Huangshan base (Tangkou)'},{t:'Night',a:'Check in: Yunshan Villa (H-T3XS8D2W6V5K)'}]},
+  8:{title:'Huangshan Day 1',city:'Huangshan',color:'#7A5010',items:[{t:'Early',a:'Shuttle to Yungu cable car'},{t:'Morning',a:'Yungu cable UP → Eastern Route'},{t:'Midday',a:'Mountaintop Loop → Northern Route'},{t:'Aft',a:'½ West Sea Grand Canyon'},{t:'Sunset',a:'Danxia Peak sunset'},{t:'Night',a:'Check in: Bai Yun Hotel peak (H-XHTMSPQ785NK)'}]},
+  9:{title:'Huangshan Day 2 → Hangzhou',city:'HM → HZ',color:'#1B6B45',items:[{t:'Sunrise',a:'Sunrise viewpoint'},{t:'Morning',a:'West Sea Grand Canyon full loop'},{t:'',a:'Tiandu (Celestial Capital) Peak — permit required!'},{t:'Midday',a:'Yuping cable DOWN + Hot Springs'},{t:'~6pm',a:'LEAVE mountain — Didi to base'},{t:'Travel',a:'~4hrs total to Hangzhou hotel'},{t:'Night',a:'Check in: Homeinn Plus West Lake'}]},
+  10:{title:'Hangzhou Day 1',city:'Hangzhou',color:'#085041',items:[{t:'Morning',a:'West Lake — clockwise walk'},{t:'',a:'Jixianting → Leifeng Pagoda → Three Pools Boat'},{t:'',a:'Su Causeway → Prince Bay Park'},{t:'Midday',a:'Lingyin Temple / Feilaifeng'},{t:'Aft',a:'Bai Causeway + Broken Bridge'},{t:'Dinner',a:'外婆家 Wai Po Jia'},{t:'Eve',a:'Hubin Street shopping'}]},
+  11:{title:'Jiande Day Trip',city:'Jiande',color:'#27500A',items:[{t:'Day',a:'Maling Skyview (Qiantan Town)'},{t:'',a:'Xin\'an River boat tour'},{t:'Eve',a:'Balcony City light show'}]},
+  12:{title:'Hangzhou Day 2',city:'Hangzhou',color:'#085041',items:[{t:'Morning',a:'Yunqi Bamboo Forest'},{t:'',a:'Longjing Tea Plantation'},{t:'Midday',a:'Xixi National Wetland Park'},{t:'',a:'鲍貝书屋 bookstore'}]},
+  13:{title:'Hangzhou → Beijing',city:'HZ → Beijing',color:'#7A1A1A',items:[{t:'Day',a:'Xiaohe Historical Street'},{t:'',a:'Final Hangzhou food run'},{t:'6pm',a:'Train → Beijing ~10:30pm'},{t:'~11pm',a:'Check in: East Sacred Hotel (H-JS7VGXL97J62)'}]},
+  14:{title:'Beijing — Great Wall',city:'Beijing',color:'#7A1A1A',items:[{t:'Full day',a:'GREAT WALL AT MUTIANYU'},{t:'',a:'Cable car up → Towers 15→23 (most beautiful!)'},{t:'',a:'Walk 15→1 · then 1→6'},{t:'',a:'TOBOGGAN SLIDE down — don\'t skip!'}]},
+  15:{title:'Beijing → Taipei',city:'BJ → Taipei',color:'#1A3A7A',items:[{t:'Morning',a:'Forbidden City (book ahead!)'},{t:'',a:'Tiananmen Square'},{t:'Midday',a:'Temple of Heaven · Peking Duck'},{t:'Aft',a:'Summer Palace'},{t:'5pm',a:'Head to PEK airport'},{t:'7:50pm',a:'Flight to Taipei Taoyuan'}]},
+  16:{title:'Taipei Day 1',city:'Taipei',color:'#1A3A7A',items:[{t:'Morning',a:'Recover · Ximending explore'},{t:'Midday',a:'CKS Memorial · Longshan Temple'},{t:'Aft',a:'National Palace Museum'},{t:'Eve',a:'Shilin or Raohe Night Market'}]},
+  17:{title:'Taipei Day 2',city:'Taipei',color:'#1A3A7A',items:[{t:'Option A',a:'Taipei 101 + Daodaocheng + Beitou Hot Springs'},{t:'Option B',a:'Jiufen + Shifen sky lanterns + Houtong (~7hrs)'}]},
+  18:{title:'Depart Taipei',city:'→ Phoenix',color:'#6B6B6B',items:[{t:'Early',a:'Check out Airbnb by 11am'},{t:'~7am',a:'Head to Taoyuan Airport (TPE)'},{t:'9:35am',a:'DL68 → Seattle SEA'},{t:'SEA',a:'Layover → DL2419 → PHX'},{t:'11:10am',a:'Arrive Phoenix'}]},
+};
+
+function selectDay(n){
+  S.selectedDay=n;
+  // highlight
+  for(let i=1;i<=18;i++){
+    const el=document.getElementById('cday-'+i);
+    if(el) el.classList.toggle('active-day',i===n);
+  }
+  document.getElementById('cal-selected-label').textContent='Apr '+n;
+  renderDayPanel(n);
+}
+
+function renderDayPanel(n){
+  const d=BASE_DAYS[n];
+  if(!d) return;
+  const dropped=S.calDropped[n]||[];
+  const custom=S.calCustom[n]||[];
+
+  let itemsHtml='';
+  d.items.forEach((item,i)=>{
+    const isDrop=dropped.includes(i);
+    itemsHtml+=`
+      <div class="activity-row" style="${isDrop?'opacity:.35;text-decoration:line-through;':''}">
+        <div class="act-time">${item.t}</div>
+        <div class="act-dot" style="background:${d.color}"></div>
+        <div class="act-text" style="flex:1">${item.a}</div>
+        <button class="icon-btn ${isDrop?'':'danger'}" style="padding:3px 8px;font-size:10px;margin-left:6px" onclick="${isDrop?'restoreItem':'dropItem'}(${n},${i})">
+          ${isDrop?'Restore':'Drop'}
+        </button>
+      </div>`;
+  });
+
+  let customHtml='';
+  custom.forEach((item,i)=>{
+    customHtml+=`
+      <div class="custom-item-row">
+        <div class="act-dot" style="background:var(--jade-mid);margin-top:1px;width:6px;height:6px;border-radius:50%;flex-shrink:0"></div>
+        <span style="color:var(--text3);width:52px;flex-shrink:0;font-size:11px">${item.time||''}</span>
+        <span style="flex:1;color:var(--jade)">${item.text}</span>
+        <button class="del-btn" onclick="removeCustom(${n},${i})">×</button>
+      </div>`;
+  });
+
+  document.getElementById('day-detail').innerHTML=`
+    <div class="day-panel">
+      <div class="fb" style="margin-bottom:.85rem">
+        <div class="day-panel-title">Apr ${n} — ${d.title}</div>
+        <span class="badge" style="background:${d.color}22;color:${d.color};border:0.5px solid ${d.color}44">${d.city}</span>
+      </div>
+
+      <div style="margin-bottom:.75rem">${itemsHtml}</div>
+
+      <div class="edit-zone">
+        <div class="edit-zone-title">+ Add activity to Apr ${n}</div>
+        ${customHtml?`<div style="margin-bottom:8px">${customHtml}</div>`:''}
+        <div style="display:flex;gap:6px;align-items:center">
+          <input class="edit-time-input" id="new-time-${n}" placeholder="Time" />
+          <input class="edit-input" id="new-act-${n}" placeholder="Activity or note..." />
+          <button class="icon-btn primary" onclick="addCustomActivity(${n})">Add</button>
+        </div>
+        <div style="margin-top:8px;font-size:10px;color:var(--text3)">
+          Tip: Use "Drop" to remove a planned activity, "Restore" to bring it back. Added activities appear on the calendar tile.
+        </div>
+      </div>
+    </div>`;
+
+  refreshCalTile(n);
+}
+
+function dropItem(n,i){
+  if(!S.calDropped[n]) S.calDropped[n]=[];
+  if(!S.calDropped[n].includes(i)) S.calDropped[n].push(i);
+  renderDayPanel(n);
+}
+function restoreItem(n,i){
+  if(!S.calDropped[n]) return;
+  S.calDropped[n]=S.calDropped[n].filter(x=>x!==i);
+  renderDayPanel(n);
+}
+function addCustomActivity(n){
+  const t=document.getElementById('new-time-'+n).value.trim();
+  const a=document.getElementById('new-act-'+n).value.trim();
+  if(!a) return;
+  if(!S.calCustom[n]) S.calCustom[n]=[];
+  S.calCustom[n].push({time:t,text:a});
+  document.getElementById('new-act-'+n).value='';
+  document.getElementById('new-time-'+n).value='';
+  renderDayPanel(n);
+}
+function removeCustom(n,i){
+  S.calCustom[n].splice(i,1);
+  renderDayPanel(n);
+}
+function refreshCalTile(n){
+  const el=document.getElementById('cc-'+n);
+  if(!el) return;
+  const custom=S.calCustom[n]||[];
+  el.innerHTML=custom.slice(0,2).map(c=>`+ ${c.time?c.time+' ':''}${c.text}`).join('<br>');
+}
+
+/* ══════ FOOD ══════ */
+const FOOD={
+  shanghai:[
+    {n:'Jia Jia Tang Bao 佳家汤包',d:'Legendary XLB near People\'s Square. Pork + crab roe dumplings.',p:'$5–10',type:'Dumplings',must:true},
+    {n:'Da Hu Chun 大壶春',d:'Historic 1932 spot. Famous crispy-bottom shengjianbao.',p:'$5–12',type:'Dumplings',must:true},
+    {n:'Nanxiang Mantou Dian',d:'100+ year-old dumpling house at Yu Garden. Crab XLB.',p:'$10–25',type:'Dumplings',must:true},
+    {n:'Yang\'s Fried Dumplings 小杨生煎',d:'Shanghai\'s most famous street snack chain.',p:'$3–8',type:'Street',must:false},
+    {n:'Jesse Restaurant 老吉士',d:'Classic Shanghainese. Red braised pork + drunken chicken.',p:'$30–60',type:'Sit-down',must:false},
+    {n:'Din Tai Fung 鼎泰丰 (Xintiandi)',d:'Refined dumplings. Open kitchen. Truffle dumplings.',p:'$20–40',type:'Dumplings',must:false},
+    {n:'Da Dong 大董 (iapm Mall)',d:'Michelin upscale. Peking duck + sea cucumber.',p:'$40–80',type:'Fine dining',must:false},
+    {n:'Haiwang Sichuan Hot Pot',d:'Large communal mala hot pot. Great for groups.',p:'$25–60',type:'Hot pot',must:false},
+    {n:'Huanghe Road Food Street',d:'Multiple famous snack restaurants in one historic street.',p:'$5–20',type:'Street',must:false},
+    {n:'Nudake Café',d:'Trendy Korean-style dessert café.',p:'$5–15',type:'Café',must:false},
+  ],
+  hangzhou:[
+    {n:'外婆家 Wai Po Jia',d:'Essential Hangzhou chain. Dongpo pork, West Lake fish.',p:'$10–25',type:'Sit-down',must:true},
+    {n:'Longjing Shrimp dish',d:'River shrimp stir-fried with Dragon Well tea leaves.',p:'$15–30',type:'Local dish',must:true},
+    {n:'游軍豆漿 Breakfast',d:'Local soy milk + fried dough breakfast spot.',p:'$3–8',type:'Breakfast',must:false},
+    {n:'绿茶 Green Tea Restaurant',d:'Popular chain — great value, scenic decor.',p:'$10–25',type:'Sit-down',must:false},
+    {n:'Serene Hill Hotpot',d:'Upscale hotpot option in Hangzhou.',p:'$20–50',type:'Hot pot',must:false},
+    {n:'Chalim KBBQ',d:'Korean BBQ for a change of pace.',p:'$20–40',type:'BBQ',must:false},
+  ],
+  beijing:[
+    {n:'Peking Duck — Da Dong or Siji Minfu',d:'Non-negotiable. Da Dong is Michelin elevated. Siji Minfu more local.',p:'$30–80',type:'Must-do',must:true},
+    {n:'Jianbing 煎饼 street breakfast',d:'Savory egg crepe. Get one every morning.',p:'$2–5',type:'Street',must:true},
+    {n:'Candied Hawthorn 糖葫芦',d:'Iconic Beijing street snack. Buy near hutongs.',p:'$1–3',type:'Street',must:true},
+    {n:'Zhajiang Mian 炸酱面',d:'Noodles with fermented soybean paste. Classic.',p:'$5–12',type:'Noodles',must:false},
+    {n:'Haidilao Hot Pot',d:'Famous chain. 24hr locations. Tableside entertainment.',p:'$20–50',type:'Hot pot',must:false},
+  ],
+  taipei:[
+    {n:'Din Tai Fung 鼎泰豐 (Taipei 101)',d:'World-famous XLB. Pork + shrimp dumplings.',p:'$20–40',type:'Dumplings',must:true},
+    {n:'Yong Kang Beef Noodle',d:'Legendary since 1960s. Rich braised broth.',p:'$8–15',type:'Noodles',must:true},
+    {n:'Fu Hang Soy Milk 阜杭豆漿',d:'Taiwan\'s most famous breakfast. Long lines. Worth it.',p:'$4–8',type:'Breakfast',must:true},
+    {n:'Raohe Night Market',d:'Best traditional market. Famous pepper pork bun at entrance.',p:'$5–15',type:'Night market',must:true},
+    {n:'Chun Shui Tang Boba',d:'Original bubble tea inventor.',p:'$5–10',type:'Drinks',must:true},
+    {n:'Fuzhou Pepper Buns (Raohe)',d:'Must queue — baked pork buns at market entrance.',p:'$2–5',type:'Street',must:true},
+    {n:'Ice Monster 思慕昔',d:'Famous fluffy mango shaved ice on Yongkang Street.',p:'$8–15',type:'Dessert',must:false},
+    {n:'Yi Jia Zi near Longshan Temple',d:'Old-school gua bao + braised pork rice.',p:'$5–10',type:'Local',must:false},
+    {n:'Snow King Ice Cream',d:'Classic Taiwanese ice cream shop.',p:'$3–8',type:'Dessert',must:false},
+  ]
+};
+function showFoodCity(city,btn){
+  S.foodCity=city;
+  if(btn){document.querySelectorAll('#page-food .inner-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');}
+  renderFoodCity(city);
+}
+function renderFoodCity(city){
+  const foods=FOOD[city]||[];
+  const tried=S.foodTried[city]||{};
+  const custom=S.foodTried[city+'_custom']||[];
+  const triedCount=Object.values(tried).filter(Boolean).length;
+  let html=`<div class="fb" style="margin-bottom:.75rem"><div class="t-xs t-muted">${triedCount}/${foods.length+custom.length} tried — tap to mark</div></div>`;
+  foods.forEach((f,i)=>{
+    const done=tried[i];
+    html+=`<div class="food-card ${done?'tried':''}" onclick="toggleFood('${city}',${i})">
+      <div class="fb">
+        <div class="food-name">${done?'✓ ':''}${f.n}</div>
+        <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
+          ${f.must?'<span class="badge badge-must">must</span>':''}
+          <span class="badge badge-gray">${f.type}</span>
+          <span class="t-xs t-muted">${f.p}</span>
+        </div>
+      </div>
+      <div class="food-desc">${f.d}</div>
+    </div>`;
+  });
+  custom.forEach((f,i)=>{
+    const done=(S.foodTried[city+'_cd']||{})[i];
+    html+=`<div class="food-card ${done?'tried':''}" onclick="toggleCustomFood('${city}',${i})">
+      <div class="food-name">${done?'✓ ':''}${f}</div>
+      <div class="food-desc t-muted">Added by you</div>
+    </div>`;
+  });
+  html+=`<div style="display:flex;gap:6px;margin-top:10px">
+    <input class="add-input" id="food-add-${city}" placeholder="Add restaurant or dish..." style="flex:1">
+    <button class="add-btn" onclick="addFood('${city}')" style="margin:0">Add</button>
+  </div>`;
+  document.getElementById('food-content').innerHTML=html;
+}
+function toggleFood(city,i){
+  if(!S.foodTried[city]) S.foodTried[city]={};
+  S.foodTried[city][i]=!S.foodTried[city][i];
+  renderFoodCity(city);updateStats();
+}
+function toggleCustomFood(city,i){
+  if(!S.foodTried[city+'_cd']) S.foodTried[city+'_cd']={};
+  S.foodTried[city+'_cd'][i]=!S.foodTried[city+'_cd'][i];
+  renderFoodCity(city);
+}
+function addFood(city){
+  const inp=document.getElementById('food-add-'+city);
+  if(!inp.value.trim()) return;
+  if(!S.foodTried[city+'_custom']) S.foodTried[city+'_custom']=[];
+  S.foodTried[city+'_custom'].push(inp.value.trim());
+  renderFoodCity(city);
+}
+
+/* ══════ TO-DO ══════ */
+const TODO={
+  bookings:[
+    {id:'b1',label:'Book Great Wall Mutianyu tickets',sub:'Apr 14 needed. Book at mutianyugreatwall.com — sells out',urgent:true},
+    {id:'b2',label:'Book Forbidden City tickets',sub:'Apr 15. Book at gugong.com/en weeks ahead',urgent:true},
+    {id:'b3',label:'Book Huangshan Tiandu Peak permit',sub:'Opens every 5 years — verify availability now',urgent:true},
+    {id:'b4',label:'Train: Shanghai → Huangshan base',sub:'Apr 7 EOD — 12306.cn or Trip.com',urgent:false},
+    {id:'b5',label:'Train: Huangshan → Hangzhou',sub:'Apr 9 ~6pm from Huangshan City Station',urgent:false},
+    {id:'b6',label:'Train: Hangzhou → Jiande (day trip)',sub:'Apr 11 morning',urgent:false},
+    {id:'b7',label:'Train: Jiande → Hangzhou return',sub:'Apr 11 evening',urgent:false},
+    {id:'b8',label:'Train: Hangzhou → Beijing',sub:'Apr 13 ~6pm · 4.5hr G-train',urgent:false},
+    {id:'b9',label:'Confirm Taipei Airbnb with host Yao',sub:'Verify booking is finalized',urgent:false},
+    {id:'b10',label:'Luggage storage at Huangshan base',sub:'Tangkou bus station or Huangshan railway station',urgent:false},
+  ],
+  prep:[
+    {id:'p1',label:'Install VPN before entering China (all travelers)',sub:'ExpressVPN/NordVPN — must install BEFORE landing',urgent:true},
+    {id:'p2',label:'Set up Alipay Tourist Edition (all travelers)',sub:'Link foreign Visa/Mastercard — essential for China',urgent:true},
+    {id:'p3',label:'Download Didi app + create account',sub:'China\'s Uber — needed for Huangshan logistics',urgent:true},
+    {id:'p4',label:'Download AMAP offline maps for Chinese cities',sub:'Google Maps works poorly in China',urgent:true},
+    {id:'p5',label:'Get EasyCard for Taipei MRT',sub:'Available at Taoyuan Airport arrival hall',urgent:false},
+    {id:'p6',label:'Verify visa-free entry for all passports',sub:'~50 countries 30-day visa-free China; 90 days Taiwan for US',urgent:false},
+    {id:'p7',label:'Notify bank/credit cards of travel',sub:'China + Taiwan — avoid fraud blocks mid-trip',urgent:false},
+    {id:'p8',label:'Google Translate offline Chinese pack',sub:'Camera translate mode is very useful for menus',urgent:false},
+  ],
+  logistics:[
+    {id:'l1',label:'Plan Huangshan luggage strategy',sub:'Leave heavy bags at Yunshan Villa — only bring day pack up mountain',urgent:true},
+    {id:'l2',label:'Leave mountain by 6pm on Apr 9 — firm',sub:'Didi+train = 4hrs total to Hangzhou hotel',urgent:true},
+    {id:'l3',label:'Book Great Wall transport from Beijing hotel',sub:'Mutianyu ~1.5hr from center — hire car or bus 877+H23',urgent:false},
+    {id:'l4',label:'Plan Beijing airport transfer Apr 15',sub:'7:50pm flight — leave hotel by 5pm minimum',urgent:false},
+    {id:'l5',label:'Decide Taiwan Option A vs B',sub:'Go to Taiwan Plan tab and vote!',urgent:false},
+    {id:'l6',label:'Check Hakka Tung Festival dates in Taiwan',sub:'Usually April — verify if overlapping Apr 15–18',urgent:false},
+  ]
+};
+function showTodoSection(sec,btn){
+  S.todoSection=sec;
+  if(btn){document.querySelectorAll('#page-todo .inner-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');}
+  renderTodo(sec);
+}
+function renderTodo(sec){
+  const items=TODO[sec]||[];
+  const doneCount=items.filter(i=>S.todoState[i.id]).length;
+  const custom=S.todoState['custom_'+sec]||[];
+  let html=`<div class="fb" style="margin-bottom:.75rem"><div class="t-xs t-muted">${doneCount}/${items.length} done</div></div>`;
+  items.forEach(item=>{
+    const done=S.todoState[item.id];
+    html+=`<div class="check-row" onclick="toggleTodo('${item.id}')">
+      <div class="checkbox ${done?'done':''}">${done?'<svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>':''}</div>
+      <div style="flex:1"><div class="check-label ${done?'done':''}">${item.label}</div><div class="check-sub">${item.sub}</div></div>
+      ${item.urgent&&!done?'<span class="badge badge-red" style="flex-shrink:0">Urgent</span>':''}
+    </div>`;
+  });
+  custom.forEach((item,i)=>{
+    const done=S.todoState['c_'+sec+'_'+i];
+    html+=`<div class="check-row" onclick="toggleCustomTodo('${sec}',${i})">
+      <div class="checkbox ${done?'done':''}">${done?'<svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>':''}</div>
+      <div class="check-label ${done?'done':''}">${item}</div>
+    </div>`;
+  });
+  html+=`<div style="display:flex;gap:6px;margin-top:10px">
+    <input class="add-input" id="todo-add-${sec}" placeholder="Add task..." style="flex:1">
+    <button class="add-btn" onclick="addTodo('${sec}')" style="margin:0">Add</button>
+  </div>`;
+  document.getElementById('todo-content').innerHTML=html;
+  updateStats();
+}
+function toggleTodo(id){S.todoState[id]=!S.todoState[id];renderTodo(S.todoSection);updateStats();}
+function toggleCustomTodo(sec,i){S.todoState['c_'+sec+'_'+i]=!S.todoState['c_'+sec+'_'+i];renderTodo(sec);}
+function addTodo(sec){
+  const inp=document.getElementById('todo-add-'+sec);
+  if(!inp.value.trim()) return;
+  if(!S.todoState['custom_'+sec]) S.todoState['custom_'+sec]=[];
+  S.todoState['custom_'+sec].push(inp.value.trim());
+  renderTodo(sec);
+}
+
+/* ══════ BUDGET ══════ */
+const HOTEL_COSTS=[
+  {city:'Shanghai (5 nights)',cost:1248,color:'#993C1D'},
+  {city:'Huangshan Base (1 night)',cost:152,color:'#7A5010'},
+  {city:'Huangshan Peak (1 night)',cost:686,color:'#7A5010'},
+  {city:'Hangzhou (4 nights)',cost:575,color:'#085041'},
+  {city:'Beijing (2 nights)',cost:648,color:'#7A1A1A'},
+  {city:'Taipei Airbnb (3 nights)',cost:831,color:'#1A3A7A'},
+];
+function renderBudgetBars(){
+  const max=Math.max(...HOTEL_COSTS.map(h=>h.cost));
+  let html='';
+  HOTEL_COSTS.forEach(h=>{
+    const pct=Math.round(h.cost/max*100);
+    html+=`<div class="fb" style="margin-bottom:12px;align-items:center">
+      <div class="t-sm" style="width:160px;flex-shrink:0">${h.city}</div>
+      <div class="bbar-wrap"><div class="bbar-fill" style="width:${pct}%;background:${h.color}"></div></div>
+      <div class="bold t-sm" style="width:55px;text-align:right">$${h.cost}</div>
+    </div>`;
+  });
+  document.getElementById('budget-bars').innerHTML=html;
+}
+function setPax(n){
+  document.querySelectorAll('.pax-pill').forEach(p=>p.classList.remove('on'));
+  document.getElementById('pax'+n).classList.add('on');
+  const pp=Math.round(3988/n);
+  document.getElementById('pp-hotels').textContent=`~$${pp}/pp`;
+  document.getElementById('pp-total').textContent=`~$${Math.round((3988+2500)/n)}–${Math.round((3988+3500)/n)}/pp`;
+  document.getElementById('pax-result').textContent=`Split ${n} ways: ~$${pp}/pp hotels. Full trip ~$${Math.round((3988+2500)/n)}–${Math.round((3988+3500)/n)}/pp.`;
+}
+function addExpense(){
+  const name=document.getElementById('exp-name').value.trim();
+  const amt=document.getElementById('exp-amt').value.trim();
+  if(!name||!amt) return;
+  S.customExpenses.push({name,amt});
+  document.getElementById('exp-name').value='';
+  document.getElementById('exp-amt').value='';
+  document.getElementById('custom-expenses').innerHTML=S.customExpenses.map(e=>`<div class="card-sm fb" style="margin-bottom:4px"><span class="t-sm">${e.name}</span><span class="bold t-jade">$${e.amt}</span></div>`).join('');
+}
+
+/* ══════ TAIWAN ══════ */
+const TAIPEI_TODOS=[
+  {id:'tw1',label:'CKS Memorial Hall',opt:'both'},
+  {id:'tw2',label:'Ximending Shopping District',opt:'both'},
+  {id:'tw3',label:'Taipei 101 Observatory',opt:'both'},
+  {id:'tw4',label:'National Palace Museum',opt:'both'},
+  {id:'tw5',label:'Longshan Temple',opt:'both'},
+  {id:'tw6',label:'Daodaocheng Dihua District',opt:'both'},
+  {id:'tw7',label:'Beitou Hot Springs',opt:'a'},
+  {id:'tw8',label:'Jiufen Old Street (day trip)',opt:'b'},
+  {id:'tw9',label:'Shifen — sky lanterns',opt:'b'},
+  {id:'tw10',label:'Houtong Cat Village',opt:'b'},
+  {id:'tw11',label:'Raohe Night Market',opt:'both'},
+  {id:'tw12',label:'Shilin Night Market',opt:'both'},
+];
+function selectTaiwan(opt){S.taiwanChoice=opt;renderTaiwan();}
+function voteTaiwan(name,opt){S.taiwanVotes[name]=opt;renderTaiwan();}
+function renderTaiwan(){
+  const a=S.taiwanChoice==='a';
+  document.getElementById('tw-a').classList.toggle('selected',a);
+  document.getElementById('tw-b').classList.toggle('selected',!a);
+  document.getElementById('tw-a-badge').textContent=a?'Selected ✓':'';
+  document.getElementById('tw-a-badge').className='badge '+(a?'badge-ink':'badge-gray');
+  document.getElementById('tw-b-badge').textContent=!a?'Selected ✓':'';
+  document.getElementById('tw-b-badge').className='badge '+(!a?'badge-ink':'badge-gray');
+  const members=['Adityaa','Jeffrey','Mani','Andrew'];
+  let vHtml='';
+  members.forEach(m=>{
+    const v=S.taiwanVotes[m];
+    vHtml+=`<div><div class="t-xs t-muted" style="margin-bottom:3px">${m}</div><div style="display:flex;gap:3px">
+      <button class="pax-pill ${v==='a'?'on':''}" onclick="voteTaiwan('${m}','a')" style="padding:3px 10px">A</button>
+      <button class="pax-pill ${v==='b'?'on':''}" onclick="voteTaiwan('${m}','b')" style="padding:3px 10px">B</button>
+    </div></div>`;
+  });
+  document.getElementById('taiwan-votes').innerHTML=vHtml;
+  let tHtml='';
+  TAIPEI_TODOS.forEach(t=>{
+    if(t.opt!=='both'&&t.opt!==S.taiwanChoice) return;
+    const done=S.todoState[t.id];
+    tHtml+=`<div class="check-row" onclick="toggleTodo('${t.id}')">
+      <div class="checkbox ${done?'done':''}">${done?'<svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>':''}</div>
+      <div class="check-label ${done?'done':''}">${t.label}</div>
+      ${t.opt!=='both'?`<span class="badge badge-blue" style="font-size:9px">Opt ${t.opt.toUpperCase()}</span>`:''}
+    </div>`;
+  });
+  document.getElementById('taipei-todos').innerHTML=tHtml;
+}
+
+/* ══════ PACKING ══════ */
+const PACK={
+  essentials:[
+    {id:'pk1',label:'Passport — valid 6+ months past Apr 18'},
+    {id:'pk2',label:'Travel insurance documentation'},
+    {id:'pk3',label:'Portable power bank 10,000mAh+'},
+    {id:'pk4',label:'Comfortable walking shoes (10–15k steps/day)'},
+    {id:'pk5',label:'Hiking boots/trail shoes for Huangshan'},
+    {id:'pk6',label:'Warm layers for Huangshan (cold + windy at 1,864m)'},
+    {id:'pk7',label:'Rain jacket / packable poncho'},
+    {id:'pk8',label:'Small day pack for mountain'},
+    {id:'pk9',label:'Reusable water bottle'},
+    {id:'pk10',label:'Blister plasters + basic medications'},
+    {id:'pk11',label:'Sunscreen + sunglasses'},
+    {id:'pk12',label:'Snacks (buy in Tangkou — 2–3x cheaper than peak)'},
+    {id:'pk13',label:'Universal power adapter (China A/I · Taiwan A/B)'},
+  ],
+  tech:[
+    {id:'t1',label:'VPN installed and tested on all devices'},
+    {id:'t2',label:'Alipay Tourist Edition + linked foreign card'},
+    {id:'t3',label:'Didi app downloaded + account created'},
+    {id:'t4',label:'WeChat installed + account verified'},
+    {id:'t5',label:'AMAP / Baidu Maps offline packs downloaded'},
+    {id:'t6',label:'Google Translate offline Chinese pack'},
+    {id:'t7',label:'Trip.com or 12306 for train tickets'},
+    {id:'t8',label:'All hotel confirmations saved offline / screenshot'},
+    {id:'t9',label:'International phone plan or SIM sorted'},
+    {id:'t10',label:'Camera + storage space checked'},
+  ],
+  hiking:[
+    {id:'h1',label:'Hiking boots — wet rocky paths on mountain'},
+    {id:'h2',label:'Warm base layer + fleece mid layer'},
+    {id:'h3',label:'Waterproof outer shell'},
+    {id:'h4',label:'Gloves + beanie (near freezing Apr peak)'},
+    {id:'h5',label:'2 days of snacks from Tangkou'},
+    {id:'h6',label:'Cash for cable cars: Yungu ¥80 + Yuping ¥80 + entrance'},
+    {id:'h7',label:'Tiandu Peak permit confirmed'},
+    {id:'h8',label:'Luggage storage arranged at base'},
+    {id:'h9',label:'Day 1: Yungu UP → East → Mountaintop Loop → Danxia sunset'},
+    {id:'h10',label:'Day 2: Sunrise → West Sea Canyon → Tiandu → Yuping DOWN → Hot Springs'},
+    {id:'h11',label:'Leave mountain by 6pm Apr 9 — 4hr journey to HZ'},
+  ],
+  docs:[
+    {id:'d1',label:'Passports — all travelers (check expiry)'},
+    {id:'d2',label:'Shanghai: Holiday Inn — 67868940 / 64171494'},
+    {id:'d3',label:'Huangshan base: Yunshan — H-T3XS8D2W6V5K / H-VLHPLHWNBWBF'},
+    {id:'d4',label:'Huangshan peak: Bai Yun — H-XHTMSPQ785NK / H-SVDVPCLQ6PZ3'},
+    {id:'d5',label:'Hangzhou: Homeinn — 165810913122144 · PIN 9534'},
+    {id:'d6',label:'Beijing: East Sacred — H-JS7VGXL97J62'},
+    {id:'d7',label:'Taipei Airbnb — host Yao contact + address'},
+    {id:'d8',label:'Flights — Delta PHX→PVG and TPE→PHX'},
+    {id:'d9',label:'All 5 train ticket confirmations'},
+    {id:'d10',label:'Great Wall Mutianyu ticket + QR code'},
+    {id:'d11',label:'Forbidden City ticket + QR code'},
+    {id:'d12',label:'Huangshan Tiandu Peak permit'},
+    {id:'d13',label:'Travel insurance — policy + emergency contact'},
+    {id:'d14',label:'US Embassy China emergency: +86-10-8531-4000'},
+  ]
+};
+function showPackSection(sec,btn){
+  S.packSection=sec;
+  if(btn){document.querySelectorAll('#page-packing .inner-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');}
+  renderPacking(sec);
+}
+function renderPacking(sec){
+  const items=PACK[sec]||[];
+  const doneCount=items.filter(i=>S.packDone[i.id]).length;
+  const custom=S.packDone['custom_'+sec]||[];
+  let html=`<div class="fb" style="margin-bottom:.75rem"><div class="t-xs t-muted">${doneCount}/${items.length} packed</div></div>`;
+  items.forEach(item=>{
+    const done=S.packDone[item.id];
+    html+=`<div class="check-row" onclick="togglePack('${item.id}')">
+      <div class="checkbox ${done?'done':''}">${done?'<svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>':''}</div>
+      <div class="check-label ${done?'done':''}">${item.label}</div>
+    </div>`;
+  });
+  custom.forEach((item,i)=>{
+    const done=S.packDone['c_'+sec+'_'+i];
+    html+=`<div class="check-row" onclick="toggleCustomPack('${sec}',${i})">
+      <div class="checkbox ${done?'done':''}">${done?'<svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>':''}</div>
+      <div class="check-label ${done?'done':''}">${item}</div>
+    </div>`;
+  });
+  html+=`<div style="display:flex;gap:6px;margin-top:10px">
+    <input class="add-input" id="pack-add-${sec}" placeholder="Add item..." style="flex:1">
+    <button class="add-btn" onclick="addPackItem('${sec}')" style="margin:0">Add</button>
+  </div>`;
+  document.getElementById('pack-content').innerHTML=html;
+}
+function togglePack(id){S.packDone[id]=!S.packDone[id];renderPacking(S.packSection);}
+function toggleCustomPack(sec,i){S.packDone['c_'+sec+'_'+i]=!S.packDone['c_'+sec+'_'+i];renderPacking(sec);}
+function addPackItem(sec){
+  const inp=document.getElementById('pack-add-'+sec);
+  if(!inp.value.trim()) return;
+  if(!S.packDone['custom_'+sec]) S.packDone['custom_'+sec]=[];
+  S.packDone['custom_'+sec].push(inp.value.trim());
+  renderPacking(sec);
+}
+
+/* ══════ STATS ══════ */
+function updateStats(){
+  const allTodo=[...TODO.bookings,...TODO.prep,...TODO.logistics];
+  document.getElementById('ov-checked').textContent=allTodo.filter(i=>S.todoState[i.id]).length+'/'+allTodo.length;
+  let tried=0,total=0;
+  Object.keys(FOOD).forEach(city=>{tried+=Object.values(S.foodTried[city]||{}).filter(Boolean).length;total+=FOOD[city].length;});
+  document.getElementById('ov-food').textContent=tried+'/'+total;
+}
+
+/* ══════ INIT ══════ */
+updateStats();
+renderFoodCity('shanghai');
+renderTodo('bookings');
+renderPacking('essentials');
+renderTaiwan();
+renderBudgetBars();
+</script>
+</body>
+</html>

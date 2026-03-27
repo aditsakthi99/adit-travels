@@ -1,118 +1,98 @@
 import { createFileRoute } from '@tanstack/react-router'
-import {
-  Zap,
-  Server,
-  Route as RouteIcon,
-  Shield,
-  Waves,
-  Sparkles,
-} from 'lucide-react'
 
 export const Route = createFileRoute('/')({ component: App })
 
+const trips = [
+  {
+    id: 'china-taiwan-2026',
+    title: 'China & Taiwan',
+    year: '2026',
+    dates: 'Apr 2 – Apr 18',
+    days: 17,
+    cities: ['Shanghai', 'Suzhou', 'Huangshan', 'Hangzhou', 'Beijing', 'Taiwan'],
+    status: 'upcoming',
+    emoji: '🏯',
+    color: '#1B6B45',
+    bg: '#E8F5EE',
+  },
+]
+
 function App() {
-  const features = [
-    {
-      icon: <Zap className="w-12 h-12 text-cyan-400" />,
-      title: 'Powerful Server Functions',
-      description:
-        'Write server-side code that seamlessly integrates with your client components. Type-safe, secure, and simple.',
-    },
-    {
-      icon: <Server className="w-12 h-12 text-cyan-400" />,
-      title: 'Flexible Server Side Rendering',
-      description:
-        'Full-document SSR, streaming, and progressive enhancement out of the box. Control exactly what renders where.',
-    },
-    {
-      icon: <RouteIcon className="w-12 h-12 text-cyan-400" />,
-      title: 'API Routes',
-      description:
-        'Build type-safe API endpoints alongside your application. No separate backend needed.',
-    },
-    {
-      icon: <Shield className="w-12 h-12 text-cyan-400" />,
-      title: 'Strongly Typed Everything',
-      description:
-        'End-to-end type safety from server to client. Catch errors before they reach production.',
-    },
-    {
-      icon: <Waves className="w-12 h-12 text-cyan-400" />,
-      title: 'Full Streaming Support',
-      description:
-        'Stream data from server to client progressively. Perfect for AI applications and real-time updates.',
-    },
-    {
-      icon: <Sparkles className="w-12 h-12 text-cyan-400" />,
-      title: 'Next Generation Ready',
-      description:
-        'Built from the ground up for modern web applications. Deploy anywhere JavaScript runs.',
-    },
-  ]
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
-      <section className="relative py-20 px-6 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-purple-500/10"></div>
-        <div className="relative max-w-5xl mx-auto">
-          <div className="flex items-center justify-center gap-6 mb-6">
-            <img
-              src="/tanstack-circle-logo.png"
-              alt="TanStack Logo"
-              className="w-24 h-24 md:w-32 md:h-32"
-            />
-            <h1 className="text-6xl md:text-7xl font-black text-white [letter-spacing:-0.08em]">
-              <span className="text-gray-300">TANSTACK</span>{' '}
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                START
-              </span>
-            </h1>
+    <div style={{ minHeight: '100vh', background: '#0D1B12', fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+      {/* Header */}
+      <div style={{ background: '#0D1B12', borderBottom: '1px solid rgba(111,207,151,0.15)', padding: '2rem 2rem 1.5rem' }}>
+        <div style={{ maxWidth: '1060px', margin: '0 auto' }}>
+          <div style={{ fontSize: '11px', letterSpacing: '0.15em', color: 'rgba(111,207,151,0.5)', textTransform: 'uppercase', marginBottom: '0.4rem' }}>
+            ✈ Adit's Travels
           </div>
-          <p className="text-2xl md:text-3xl text-gray-300 mb-4 font-light">
-            The framework for next generation AI applications
+          <h1 style={{ fontFamily: 'Georgia, serif', fontSize: '28px', fontWeight: '600', color: '#E8F5EE', margin: 0 }}>
+            Trip Journal
+          </h1>
+          <p style={{ color: 'rgba(111,207,151,0.5)', fontSize: '13px', marginTop: '0.4rem' }}>
+            Every adventure, documented.
           </p>
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
-            Full-stack framework powered by TanStack Router for React and Solid.
-            Build modern applications with server functions, streaming, and type
-            safety.
-          </p>
-          <div className="flex flex-col items-center gap-4">
-            <a
-              href="https://tanstack.com/start"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-3 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold rounded-lg transition-colors shadow-lg shadow-cyan-500/50"
-            >
-              Documentation
-            </a>
-            <p className="text-gray-400 text-sm mt-2">
-              Begin your TanStack Start journey by editing{' '}
-              <code className="px-2 py-1 bg-slate-700 rounded text-cyan-400">
-                /src/routes/index.tsx
-              </code>
-            </p>
-          </div>
         </div>
-      </section>
+      </div>
 
-      <section className="py-16 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10"
-            >
-              <div className="mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                {feature.title}
-              </h3>
-              <p className="text-gray-400 leading-relaxed">
-                {feature.description}
-              </p>
-            </div>
+      {/* Trips Grid */}
+      <div style={{ maxWidth: '1060px', margin: '0 auto', padding: '2rem' }}>
+        <div style={{ fontSize: '10px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(111,207,151,0.4)', marginBottom: '1rem' }}>
+          {trips.length} trip{trips.length !== 1 ? 's' : ''}
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
+          {trips.map(trip => (
+            <a key={trip.id} href={`/${trip.id}`} style={{ textDecoration: 'none' }}>
+              <div style={{
+                background: 'rgba(255,255,255,0.04)',
+                border: '0.5px solid rgba(111,207,151,0.15)',
+                borderRadius: '16px',
+                padding: '1.5rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.08)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.04)')}
+              >
+                {/* Emoji + Status */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+                  <span style={{ fontSize: '32px' }}>{trip.emoji}</span>
+                  <span style={{
+                    fontSize: '10px', padding: '3px 10px', borderRadius: '20px', fontWeight: '500', letterSpacing: '0.05em',
+                    background: trip.status === 'upcoming' ? 'rgba(111,207,151,0.15)' : 'rgba(255,255,255,0.08)',
+                    color: trip.status === 'upcoming' ? '#6FCF97' : 'rgba(255,255,255,0.4)',
+                    border: `0.5px solid ${trip.status === 'upcoming' ? 'rgba(111,207,151,0.3)' : 'rgba(255,255,255,0.1)'}`,
+                  }}>
+                    {trip.status === 'upcoming' ? '✦ Upcoming' : '✓ Completed'}
+                  </span>
+                </div>
+
+                {/* Title */}
+                <div style={{ fontFamily: 'Georgia, serif', fontSize: '20px', fontWeight: '600', color: '#E8F5EE', marginBottom: '4px' }}>
+                  {trip.title}
+                </div>
+                <div style={{ fontSize: '12px', color: 'rgba(111,207,151,0.5)', marginBottom: '1rem' }}>
+                  {trip.dates} · {trip.days} days
+                </div>
+
+                {/* Cities */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                  {trip.cities.map(city => (
+                    <span key={city} style={{
+                      fontSize: '11px', padding: '2px 8px', borderRadius: '4px',
+                      background: 'rgba(111,207,151,0.08)',
+                      color: 'rgba(111,207,151,0.7)',
+                      border: '0.5px solid rgba(111,207,151,0.15)',
+                    }}>
+                      {city}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </a>
           ))}
         </div>
-      </section>
+      </div>
     </div>
   )
 }

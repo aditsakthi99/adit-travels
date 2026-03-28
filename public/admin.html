@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add a Trip — Adit's Travels</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { 
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: #0D1B12; color: #E8F5EE;
+    min-height: 100vh; padding: 2rem;
+  }
+  .wrap { max-width: 700px; margin: 0 auto; }
+  .back { color: rgba(111,207,151,0.6); text-decoration: none; font-size: 13px; }
+  h1 { font-family: 'Noto Serif', serif; font-size: 24px; color: #E8F5EE; margin: 0.5rem 0 0.25rem; }
+  .sub { color: rgba(111,207,151,0.5); font-size: 13px; margin-bottom: 1.5rem; }
+  .drop-zone {
+    border: 2px dashed rgba(111,207,151,0.3);
+    border-radius: 12px; padding: 2rem;
+    text-align: center; cursor: pointer;
+    transition: all 0.2s; margin-bottom: 1rem;
+    background: rgba(255,255,255,0.02);
+  }
+  .drop-zone:hover, .drop-zone.drag-over {
+    border-color: rgba(111,207,151,0.6);
+    background: rgba(111,207,151,0.05);
+  }
+  .drop-icon { font-size: 32px; margin-bottom: 0.5rem; }
+  .drop-text { font-size: 14px; color: rgba(111,207,151,0.7); }
+  .drop-sub { font-size: 12px; color: rgba(111,207,151,0.4); margin-top: 4px; }
+  .divider { text-align: center; color: rgba(111,207,151,0.3); font-size: 12px; margin: 1rem 0; }
+  textarea {
+    width: 100%; height: 200px;
+    background: rgba(255,255,255,0.04);
+    border: 0.5px solid rgba(111,207,151,0.2);
+    border-radius: 12px; padding: 1rem;
+    color: #E8F5EE; font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    resize: vertical; outline: none;
+  }
+  textarea::placeholder { color: rgba(111,207,151,0.3); }
+  button {
+    width: 100%; margin-top: 1rem;
+    padding: 0.85rem; background: #1B6B45;
+    color: #E8F5EE; border: none;
+    border-radius: 8px; font-size: 14px;
+    font-weight: 500; cursor: pointer;
+    transition: background 0.2s;
+  }
+  button:hover { background: #2D9B66; }
+  button:disabled { background: rgba(111,207,151,0.2); cursor: not-allowed; }
+  .success {
+    margin-top: 1.5rem; padding: 1.25rem;
+    background: rgba(111,207,151,0.08);
+    border: 0.5px solid rgba(111,207,151,0.25);
+    border-radius: 12px; display: none;
+  }
+  .success.show { display: block; }
+  .success-label { font-size: 11px; color: rgba(111,207,151,0.6); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .success-title { font-family: 'Noto Serif', serif; font-size: 18px; color: #E8F5EE; }
+  .success-meta { font-size: 12px; color: rgba(111,207,151,0.6); margin-top: 4px; }
+  .success-link { display: inline-block; margin-top: 1rem; color: #6FCF97; font-size: 13px; text-decoration: none; }
+  .error { margin-top: 1rem; color: #E88; font-size: 13px; display: none; }
+  .error.show { display: block; }
+  .file-selected { 
+    background: rgba(111,207,151,0.08);
+    border: 0.5px solid rgba(111,207,151,0.25);
+    border-radius: 8px; padding: 0.75rem 1rem;
+    font-size: 13px; color: rgba(111,207,151,0.8);
+    margin-bottom: 1rem; display: none;
+  }
+  .file-selected.show { display: flex; align-items: center; justify-content: space-between; }
+  .file-clear { cursor: pointer; color: rgba(111,207,151,0.5); font-size: 18px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="/" class="back">← Back to all trips</a>
+  <h1>Add a Past Trip</h1>
+  <p class="sub">Upload a Google Doc or paste your itinerary — Claude extracts the details automatically.</p>
+
+  <!-- File upload zone -->
+  <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+    <div class="drop-icon">📄</div>
+    <div class="drop-text">Drop your Google Doc here</div>
+    <div class="drop-sub">or click to browse · supports .txt, .doc, .docx, .pdf</div>
+  </div>
+  <input type="file" id="fileInput" accept=".txt,.doc,.docx,.pdf" style="display:none">
+
+  <!-- Selected file indicator -->
+  <div class="file-selected" id="fileSelected">
+    <span id="fileName"></span>
+    <span class="file-clear" onclick="clearFile()">✕</span>
+  </div>
+
+  <div class="divider">— or paste text directly —</div>
+
+  <textarea id="docText" placeholder="Paste your itinerary text here..."></textarea>
+
+  <button id="btn" onclick="generate()">✨ Generate Trip Dashboard</button>
+
+  <div class="success" id="success">
+    <div class="success-label">✓ Trip added successfully</div>
+    <div class="success-title" id="successTitle"></div>
+    <div class="success-meta" id="successMeta"></div>
+    <a href="/" class="success-link">→ View on homepage</a>
+  </div>
+
+  <div class="error" id="error"></div>
+</div>
+
+<script>
+  const dropZone = document.getElementById('dropZone')
+  const fileInput = document.getElementById('fileInput')
+  const fileSelected = document.getElementById('fileSelected')
+  const fileName = document.getElementById('fileName')
+  const docText = document.getElementById('docText')
+  const btn = document.getElementById('btn')
+  const success = document.getElementById('success')
+  const error = document.getElementById('error')
+
+  // Drag and drop
+  dropZone.addEventListener('dragover', e => {
+    e.preventDefault()
+    dropZone.classList.add('drag-over')
+  })
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'))
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault()
+    dropZone.classList.remove('drag-over')
+    const file = e.dataTransfer.files[0]
+    if (file) handleFile(file)
+  })
+
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files[0]) handleFile(fileInput.files[0])
+  })
+
+  function handleFile(file) {
+    fileName.textContent = '📄 ' + file.name
+    fileSelected.classList.add('show')
+    const reader = new FileReader()
+    reader.onload = e => { docText.value = e.target.result }
+    reader.readAsText(file)
+  }
+
+  function clearFile() {
+    fileInput.value = ''
+    fileSelected.classList.remove('show')
+    docText.value = ''
+  }
+
+  async function generate() {
+    const text = docText.value.trim()
+    if (!text) return
+
+    btn.disabled = true
+    btn.textContent = '✨ Claude is reading your itinerary...'
+    success.classList.remove('show')
+    error.classList.remove('show')
+
+    try {
+      const res = await fetch('/api/generate-trip', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ docText: text })
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Unknown error')
+
+      document.getElementById('successTitle').textContent = data.trip.emoji + ' ' + data.trip.title
+      document.getElementById('successMeta').textContent = data.trip.dates + ' · ' + data.trip.days + ' days · ' + (data.trip.cities || []).join(', ')
+      success.classList.add('show')
+      clearFile()
+    } catch (e) {
+      error.textContent = 'Error: ' + e.message
+      error.classList.add('show')
+    } finally {
+      btn.disabled = false
+      btn.textContent = '✨ Generate Trip Dashboard'
+    }
+  }
+</script>
+</body>
+</html>

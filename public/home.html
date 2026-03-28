@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adit's Travels — Trip Journal</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', system-ui, sans-serif; background: #0D1B12; color: #E8F5EE; min-height: 100vh; }
+  .header { background: #0D1B12; border-bottom: 1px solid rgba(111,207,151,0.15); padding: 2rem 2rem 1.5rem; }
+  .header-inner { max-width: 1060px; margin: 0 auto; }
+  .header-tag { font-size: 11px; letter-spacing: 0.15em; color: rgba(111,207,151,0.5); text-transform: uppercase; margin-bottom: 0.4rem; }
+  h1 { font-family: 'Noto Serif', serif; font-size: 28px; font-weight: 600; color: #E8F5EE; margin: 0; }
+  .header-sub { color: rgba(111,207,151,0.5); font-size: 13px; margin-top: 0.4rem; }
+  .content { max-width: 1060px; margin: 0 auto; padding: 2rem; }
+  .count { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(111,207,151,0.4); margin-bottom: 1rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .card { background: rgba(255,255,255,0.04); border: 0.5px solid rgba(111,207,151,0.15); border-radius: 16px; padding: 1.5rem; cursor: pointer; transition: all 0.2s; text-decoration: none; display: block; }
+  .card:hover { background: rgba(255,255,255,0.08); }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+  .emoji { font-size: 32px; }
+  .badge { font-size: 10px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+  .upcoming { background: rgba(111,207,151,0.15); color: #6FCF97; border: 0.5px solid rgba(111,207,151,0.3); }
+  .completed { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); border: 0.5px solid rgba(255,255,255,0.1); }
+  .card-title { font-family: 'Noto Serif', serif; font-size: 20px; font-weight: 600; color: #E8F5EE; margin-bottom: 4px; }
+  .card-dates { font-size: 12px; color: rgba(111,207,151,0.5); margin-bottom: 1rem; }
+  .cities { display: flex; flex-wrap: wrap; gap: 6px; }
+  .city { font-size: 11px; padding: 2px 8px; border-radius: 4px; background: rgba(111,207,151,0.08); color: rgba(111,207,151,0.7); border: 0.5px solid rgba(111,207,151,0.15); }
+  .add-wrap { margin-top: 2rem; text-align: center; }
+  .add-btn { display: inline-flex; align-items: center; gap: 6px; padding: 0.6rem 1.25rem; border-radius: 8px; background: rgba(111,207,151,0.08); border: 0.5px solid rgba(111,207,151,0.2); color: rgba(111,207,151,0.7); font-size: 13px; text-decoration: none; }
+  .add-btn:hover { background: rgba(111,207,151,0.15); }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">✈ Adit's Travels</div>
+    <h1>Trip Journal</h1>
+    <p class="header-sub">Every adventure, documented.</p>
+  </div>
+</div>
+<div class="content">
+  <div class="count" id="count">Loading...</div>
+  <div class="grid" id="grid"></div>
+  <div class="add-wrap">
+    <a href="/admin.html" class="add-btn">+ Add a past trip</a>
+  </div>
+</div>
+<script>
+const hardcoded = [{
+  id: 'china-taiwan-2026', title: 'China & Taiwan',
+  dates: 'Apr 2 – Apr 18', days: 17,
+  cities: ['Shanghai','Suzhou','Huangshan','Hangzhou','Beijing','Taiwan'],
+  status: 'upcoming', emoji: '🏯'
+}]
+
+function card(t) {
+  const up = t.status === 'upcoming'
+  return `<a href="/${t.id}" class="card">
+    <div class="card-top">
+      <span class="emoji">${t.emoji||'✈'}</span>
+      <span class="badge ${up?'upcoming':'completed'}">${up?'✦ Upcoming':'✓ Completed'}</span>
+    </div>
+    <div class="card-title">${t.title}</div>
+    <div class="card-dates">${t.dates} · ${t.days} days</div>
+    <div class="cities">${(t.cities||[]).map(c=>`<span class="city">${c}</span>`).join('')}</div>
+  </a>`
+}
+
+async function load() {
+  let kv = []
+  try {
+    const r = await fetch('/api/trips')
+    const d = await r.json()
+    if (Array.isArray(d)) kv = d
+  } catch(e) {}
+  const all = [...hardcoded, ...kv]
+  document.getElementById('count').textContent = all.length + ' trip' + (all.length !== 1 ? 's' : '')
+  document.getElementById('grid').innerHTML = all.map(card).join('')
+}
+
+load()
+</script>
+</body>
+</html>

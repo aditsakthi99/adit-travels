@@ -62,6 +62,26 @@ export default {
       }
     }
 
+    // ── NEW: GET dashboard state from KV ──
+    if (url.pathname === '/api/get-state' && request.method === 'GET') {
+      const tripId = url.searchParams.get('tripId')
+      if (!tripId) return Response.json({ error: 'missing tripId' }, { status: 400 })
+      const val = await env.TRIPS.get('state_' + tripId)
+      return Response.json(val ? JSON.parse(val) : null)
+    }
+
+    // ── NEW: POST dashboard state to KV ──
+    if (url.pathname === '/api/save-state' && request.method === 'POST') {
+      try {
+        const { tripId, state } = await request.json() as { tripId: string, state: any }
+        if (!tripId || !state) return Response.json({ error: 'missing tripId or state' }, { status: 400 })
+        await env.TRIPS.put('state_' + tripId, JSON.stringify(state))
+        return Response.json({ success: true })
+      } catch (e: any) {
+        return Response.json({ error: e.message }, { status: 500 })
+      }
+    }
+
     // For KV trips that don't have a dedicated HTML file
     const pathParts = url.pathname.split('/').filter(Boolean)
     if (pathParts.length === 1) {

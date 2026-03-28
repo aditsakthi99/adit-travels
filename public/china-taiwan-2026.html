@@ -118,6 +118,19 @@ body::before{
   border-color:rgba(111,207,151,.35);
 }
 
+/* ─── Sync indicator ─── */
+#sync-indicator{
+  position:fixed;bottom:16px;right:16px;
+  padding:5px 12px;border-radius:20px;
+  font-size:11px;font-family:'DM Sans',sans-serif;
+  background:rgba(27,107,69,.9);color:#E8F5EE;
+  border:0.5px solid rgba(111,207,151,.3);
+  opacity:0;transition:opacity .3s;
+  z-index:9999;pointer-events:none;
+}
+#sync-indicator.show{opacity:1}
+#sync-indicator.error{background:rgba(139,26,26,.9)}
+
 /* ─── Content ─── */
 .content{padding:1.25rem 1.4rem;position:relative}
 .page{display:none}.page.active{display:block;animation:rise .22s ease}
@@ -458,12 +471,10 @@ body::before{
 <!-- ═══ HEADER ═══ -->
 <div class="header">
   <svg class="header-deco" viewBox="0 0 260 90" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMaxYMid meet">
-    <!-- Bamboo stalks -->
     <rect x="200" y="0" width="3" height="90" fill="#6FCF97" rx="1.5"/>
     <rect x="212" y="5" width="2" height="85" fill="#6FCF97" rx="1" opacity=".6"/>
     <rect x="222" y="0" width="2.5" height="90" fill="#6FCF97" rx="1.2" opacity=".5"/>
     <rect x="233" y="8" width="1.5" height="82" fill="#6FCF97" rx="1" opacity=".4"/>
-    <!-- Bamboo nodes -->
     <rect x="198" y="22" width="7" height="2" rx="1" fill="#6FCF97"/>
     <rect x="198" y="48" width="7" height="2" rx="1" fill="#6FCF97"/>
     <rect x="198" y="70" width="7" height="2" rx="1" fill="#6FCF97"/>
@@ -471,22 +482,18 @@ body::before{
     <rect x="210" y="58" width="5" height="1.5" rx="1" fill="#6FCF97" opacity=".6"/>
     <rect x="220" y="18" width="5" height="1.5" rx="1" fill="#6FCF97" opacity=".5"/>
     <rect x="220" y="52" width="5" height="1.5" rx="1" fill="#6FCF97" opacity=".5"/>
-    <!-- Bamboo leaves -->
     <ellipse cx="197" cy="14" rx="14" ry="5" fill="#6FCF97" opacity=".5" transform="rotate(-35 197 14)"/>
     <ellipse cx="207" cy="8" rx="12" ry="4" fill="#6FCF97" opacity=".35" transform="rotate(25 207 8)"/>
     <ellipse cx="196" cy="40" rx="13" ry="4.5" fill="#6FCF97" opacity=".4" transform="rotate(-45 196 40)"/>
     <ellipse cx="218" cy="24" rx="11" ry="4" fill="#6FCF97" opacity=".3" transform="rotate(30 218 24)"/>
-    <!-- Cherry blossom petals -->
     <circle cx="175" cy="20" r="4" fill="#F9E0E5" opacity=".7"/>
     <circle cx="183" cy="15" r="3" fill="#F9E0E5" opacity=".5"/>
     <circle cx="170" cy="30" r="3.5" fill="#F9E0E5" opacity=".45"/>
     <circle cx="180" cy="38" r="2.5" fill="#E8A0B0" opacity=".4"/>
     <circle cx="165" cy="22" r="2" fill="#F9E0E5" opacity=".35"/>
-    <!-- Ink wash circles -->
     <circle cx="140" cy="50" r="28" fill="none" stroke="#6FCF97" stroke-width=".5" opacity=".2"/>
     <circle cx="140" cy="50" r="18" fill="none" stroke="#6FCF97" stroke-width=".5" opacity=".15"/>
   </svg>
-
   <div class="header-inner">
     <div class="header-title">中国 · 台湾 — China &amp; Taiwan 2026</div>
     <div class="header-sub">Adityaa · Jeffrey · Mani · Andrew · April 2 → April 18</div>
@@ -521,7 +528,6 @@ body::before{
     <div class="stat"><div class="stat-n" id="ov-food">0</div><div class="stat-l">foods tried</div></div>
     <div class="stat"><div class="stat-n">4</div><div class="stat-l">travelers</div></div>
   </div>
-
   <div class="section-label">Route</div>
   <div class="route-wrap">
     <div class="route-city"><div class="t-sm bold">Phoenix</div><div class="t-xs t-muted">Apr 1</div></div>
@@ -538,7 +544,6 @@ body::before{
     <div class="route-line"></div>
     <div class="route-city"><div class="t-sm bold">Phoenix</div><div class="t-xs t-muted">Apr 18</div></div>
   </div>
-
   <div class="grid2">
     <div>
       <div class="section-label">Hotels confirmed</div>
@@ -562,7 +567,6 @@ body::before{
       <div class="card-sm fb"><span class="t-sm">Luggage storage — Huangshan base</span><span class="badge badge-gray">Look into</span></div>
     </div>
   </div>
-
   <div class="section-label">Flights confirmed</div>
   <div class="card blossom-card">
     <div class="grid2">
@@ -576,7 +580,6 @@ body::before{
       </div>
     </div>
   </div>
-
   <div class="section-label">Group notes</div>
   <textarea class="notes-ta" placeholder="Shared notes for the whole group..."></textarea>
 </div>
@@ -593,7 +596,6 @@ body::before{
       <span id="cal-selected-label" class="badge badge-ink">none</span>
     </div>
   </div>
-
   <div class="scroll-x">
   <div class="cal-grid">
     <div class="cal-header">SUN</div><div class="cal-header">MON</div><div class="cal-header">TUE</div>
@@ -620,8 +622,6 @@ body::before{
     <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
   </div>
   </div>
-
-  <!-- Day detail + edit panel -->
   <div id="day-detail"></div>
 </div>
 
@@ -778,13 +778,56 @@ body::before{
 </div><!-- /content -->
 </div><!-- /app -->
 
+<!-- Sync indicator -->
+<div id="sync-indicator">Saved ✓</div>
+
 <script>
+/* ══════ KV SYNC ══════ */
+const TRIP_ID = 'china-taiwan-2026';
+let saveTimer = null;
+
+function showSyncIndicator(msg, isError) {
+  const el = document.getElementById('sync-indicator');
+  el.textContent = msg;
+  el.className = isError ? 'show error' : 'show';
+  clearTimeout(el._hideTimer);
+  el._hideTimer = setTimeout(() => { el.className = ''; }, 2000);
+}
+
+async function saveState() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    try {
+      const res = await fetch('/api/save-state', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tripId: TRIP_ID, state: S })
+      });
+      if (res.ok) showSyncIndicator('Saved ✓', false);
+      else showSyncIndicator('Save failed', true);
+    } catch(e) {
+      showSyncIndicator('Save failed', true);
+    }
+  }, 500); // debounce — waits 500ms after last change
+}
+
+async function loadState() {
+  try {
+    const res = await fetch('/api/get-state?tripId=' + TRIP_ID);
+    const data = await res.json();
+    if (data) Object.assign(S, data);
+  } catch(e) {
+    console.warn('Could not load state', e);
+  }
+}
+
+/* ══════ STATE ══════ */
 const S={
   todoState:{},foodTried:{},packDone:{},
   taiwanChoice:'a',taiwanVotes:{},
   customExpenses:[],
-  calCustom:{},      // { dayNum: [{time,text}] }
-  calDropped:{},     // { dayNum: [index of dropped base items] }
+  calCustom:{},
+  calDropped:{},
   foodCity:'shanghai',todoSection:'bookings',packSection:'essentials',
 };
 
@@ -826,7 +869,6 @@ const BASE_DAYS={
 
 function selectDay(n){
   S.selectedDay=n;
-  // highlight
   for(let i=1;i<=18;i++){
     const el=document.getElementById('cday-'+i);
     if(el) el.classList.toggle('active-day',i===n);
@@ -840,7 +882,6 @@ function renderDayPanel(n){
   if(!d) return;
   const dropped=S.calDropped[n]||[];
   const custom=S.calCustom[n]||[];
-
   let itemsHtml='';
   d.items.forEach((item,i)=>{
     const isDrop=dropped.includes(i);
@@ -854,7 +895,6 @@ function renderDayPanel(n){
         </button>
       </div>`;
   });
-
   let customHtml='';
   custom.forEach((item,i)=>{
     customHtml+=`
@@ -865,16 +905,13 @@ function renderDayPanel(n){
         <button class="del-btn" onclick="removeCustom(${n},${i})">×</button>
       </div>`;
   });
-
   document.getElementById('day-detail').innerHTML=`
     <div class="day-panel">
       <div class="fb" style="margin-bottom:.85rem">
         <div class="day-panel-title">Apr ${n} — ${d.title}</div>
         <span class="badge" style="background:${d.color}22;color:${d.color};border:0.5px solid ${d.color}44">${d.city}</span>
       </div>
-
       <div style="margin-bottom:.75rem">${itemsHtml}</div>
-
       <div class="edit-zone">
         <div class="edit-zone-title">+ Add activity to Apr ${n}</div>
         ${customHtml?`<div style="margin-bottom:8px">${customHtml}</div>`:''}
@@ -884,23 +921,22 @@ function renderDayPanel(n){
           <button class="icon-btn primary" onclick="addCustomActivity(${n})">Add</button>
         </div>
         <div style="margin-top:8px;font-size:10px;color:var(--text3)">
-          Tip: Use "Drop" to remove a planned activity, "Restore" to bring it back. Added activities appear on the calendar tile.
+          Tip: Use "Drop" to remove a planned activity, "Restore" to bring it back.
         </div>
       </div>
     </div>`;
-
   refreshCalTile(n);
 }
 
 function dropItem(n,i){
   if(!S.calDropped[n]) S.calDropped[n]=[];
   if(!S.calDropped[n].includes(i)) S.calDropped[n].push(i);
-  renderDayPanel(n);
+  renderDayPanel(n);saveState();
 }
 function restoreItem(n,i){
   if(!S.calDropped[n]) return;
   S.calDropped[n]=S.calDropped[n].filter(x=>x!==i);
-  renderDayPanel(n);
+  renderDayPanel(n);saveState();
 }
 function addCustomActivity(n){
   const t=document.getElementById('new-time-'+n).value.trim();
@@ -910,11 +946,11 @@ function addCustomActivity(n){
   S.calCustom[n].push({time:t,text:a});
   document.getElementById('new-act-'+n).value='';
   document.getElementById('new-time-'+n).value='';
-  renderDayPanel(n);
+  renderDayPanel(n);saveState();
 }
 function removeCustom(n,i){
   S.calCustom[n].splice(i,1);
-  renderDayPanel(n);
+  renderDayPanel(n);saveState();
 }
 function refreshCalTile(n){
   const el=document.getElementById('cc-'+n);
@@ -1005,19 +1041,20 @@ function renderFoodCity(city){
 function toggleFood(city,i){
   if(!S.foodTried[city]) S.foodTried[city]={};
   S.foodTried[city][i]=!S.foodTried[city][i];
-  renderFoodCity(city);updateStats();
+  renderFoodCity(city);updateStats();saveState();
 }
 function toggleCustomFood(city,i){
   if(!S.foodTried[city+'_cd']) S.foodTried[city+'_cd']={};
   S.foodTried[city+'_cd'][i]=!S.foodTried[city+'_cd'][i];
-  renderFoodCity(city);
+  renderFoodCity(city);saveState();
 }
 function addFood(city){
   const inp=document.getElementById('food-add-'+city);
   if(!inp.value.trim()) return;
   if(!S.foodTried[city+'_custom']) S.foodTried[city+'_custom']=[];
   S.foodTried[city+'_custom'].push(inp.value.trim());
-  renderFoodCity(city);
+  inp.value='';
+  renderFoodCity(city);saveState();
 }
 
 /* ══════ TO-DO ══════ */
@@ -1085,14 +1122,15 @@ function renderTodo(sec){
   document.getElementById('todo-content').innerHTML=html;
   updateStats();
 }
-function toggleTodo(id){S.todoState[id]=!S.todoState[id];renderTodo(S.todoSection);updateStats();}
-function toggleCustomTodo(sec,i){S.todoState['c_'+sec+'_'+i]=!S.todoState['c_'+sec+'_'+i];renderTodo(sec);}
+function toggleTodo(id){S.todoState[id]=!S.todoState[id];renderTodo(S.todoSection);updateStats();saveState();}
+function toggleCustomTodo(sec,i){S.todoState['c_'+sec+'_'+i]=!S.todoState['c_'+sec+'_'+i];renderTodo(sec);saveState();}
 function addTodo(sec){
   const inp=document.getElementById('todo-add-'+sec);
   if(!inp.value.trim()) return;
   if(!S.todoState['custom_'+sec]) S.todoState['custom_'+sec]=[];
   S.todoState['custom_'+sec].push(inp.value.trim());
-  renderTodo(sec);
+  inp.value='';
+  renderTodo(sec);saveState();
 }
 
 /* ══════ BUDGET ══════ */
@@ -1133,6 +1171,7 @@ function addExpense(){
   document.getElementById('exp-name').value='';
   document.getElementById('exp-amt').value='';
   document.getElementById('custom-expenses').innerHTML=S.customExpenses.map(e=>`<div class="card-sm fb" style="margin-bottom:4px"><span class="t-sm">${e.name}</span><span class="bold t-jade">$${e.amt}</span></div>`).join('');
+  saveState();
 }
 
 /* ══════ TAIWAN ══════ */
@@ -1150,8 +1189,8 @@ const TAIPEI_TODOS=[
   {id:'tw11',label:'Raohe Night Market',opt:'both'},
   {id:'tw12',label:'Shilin Night Market',opt:'both'},
 ];
-function selectTaiwan(opt){S.taiwanChoice=opt;renderTaiwan();}
-function voteTaiwan(name,opt){S.taiwanVotes[name]=opt;renderTaiwan();}
+function selectTaiwan(opt){S.taiwanChoice=opt;renderTaiwan();saveState();}
+function voteTaiwan(name,opt){S.taiwanVotes[name]=opt;renderTaiwan();saveState();}
 function renderTaiwan(){
   const a=S.taiwanChoice==='a';
   document.getElementById('tw-a').classList.toggle('selected',a);
@@ -1272,14 +1311,15 @@ function renderPacking(sec){
   </div>`;
   document.getElementById('pack-content').innerHTML=html;
 }
-function togglePack(id){S.packDone[id]=!S.packDone[id];renderPacking(S.packSection);}
-function toggleCustomPack(sec,i){S.packDone['c_'+sec+'_'+i]=!S.packDone['c_'+sec+'_'+i];renderPacking(sec);}
+function togglePack(id){S.packDone[id]=!S.packDone[id];renderPacking(S.packSection);saveState();}
+function toggleCustomPack(sec,i){S.packDone['c_'+sec+'_'+i]=!S.packDone['c_'+sec+'_'+i];renderPacking(sec);saveState();}
 function addPackItem(sec){
   const inp=document.getElementById('pack-add-'+sec);
   if(!inp.value.trim()) return;
   if(!S.packDone['custom_'+sec]) S.packDone['custom_'+sec]=[];
   S.packDone['custom_'+sec].push(inp.value.trim());
-  renderPacking(sec);
+  inp.value='';
+  renderPacking(sec);saveState();
 }
 
 /* ══════ STATS ══════ */
@@ -1292,12 +1332,16 @@ function updateStats(){
 }
 
 /* ══════ INIT ══════ */
-updateStats();
-renderFoodCity('shanghai');
-renderTodo('bookings');
-renderPacking('essentials');
-renderTaiwan();
-renderBudgetBars();
+loadState().then(() => {
+  updateStats();
+  renderFoodCity('shanghai');
+  renderTodo('bookings');
+  renderPacking('essentials');
+  renderTaiwan();
+  renderBudgetBars();
+  // Restore calendar tiles if any custom data
+  for(let i=1;i<=18;i++) refreshCalTile(i);
+});
 </script>
 </body>
 </html>

@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ChinaTaiwan2026RouteImport } from './routes/china-taiwan-2026'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 
 const ChinaTaiwan2026Route = ChinaTaiwan2026RouteImport.update({
   id: '/china-taiwan-2026',
   path: '/china-taiwan-2026',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,27 +31,31 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/china-taiwan-2026': typeof ChinaTaiwan2026Route
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/china-taiwan-2026': typeof ChinaTaiwan2026Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/china-taiwan-2026': typeof ChinaTaiwan2026Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/china-taiwan-2026'
+  fullPaths: '/' | '/admin' | '/china-taiwan-2026'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/china-taiwan-2026'
-  id: '__root__' | '/' | '/china-taiwan-2026'
+  to: '/' | '/admin' | '/china-taiwan-2026'
+  id: '__root__' | '/' | '/admin' | '/china-taiwan-2026'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   ChinaTaiwan2026Route: typeof ChinaTaiwan2026Route
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/china-taiwan-2026'
       fullPath: '/china-taiwan-2026'
       preLoaderRoute: typeof ChinaTaiwan2026RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   ChinaTaiwan2026Route: ChinaTaiwan2026Route,
 }
 export const routeTree = rootRouteImport
